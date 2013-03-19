@@ -74,11 +74,59 @@
     </section>
     
     <section>
-      <h2>Your Title</h2>
-      <p>
-        Your text...
-      </p>
+      <h2>What is fingerprinting?</h2>
+      <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
+      <p>(A more detailed list of types of fingerprinting is included below.)</p>
+    
+        <section>
+        <h2 id="privacy_threat_models">Privacy threat models</h2>
+
+        <p>Browser fingerprinting is a potential threat to privacy on the Web. This document does not attempt to provide a single unifying definition of privacy, but we note concerns about loss of anonymity and unexpected correlation of online activity.</p>
+
+        <p>Following from the practice of security threat model analysis, we note that there are distinct models of privacy threats for fingerprinting. Defenses against these threats differ, depending on the kind of user and concern.</p>
+
+        <section>
+            <h3>Personal safety and anonymous browsing</h3>
+            <p>For some users, personal physical safety can be impacted if their online activities can be associated with their real-world identity &#8212; for example, a political author under an unfriendly regime. Correlation of activity across sites (using a common fingerprint) might allow an attacker to connect a name to an online pseudonym. Such users might employ onion routing systems such as Tor to limit network-level linkability but still face the danger of browser-fingerprinting to correlate their Web-based activity.</p>
+        </section>
+        
+        <section>
+            <h3>Unexpected correlation of browsing activity</h3>
+            <p>Fingerprinting provides privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern is heightened because tools such as clearing cookies do not prevent or &#8220;re-set&#8221; correlation done via browser fingerprinting.</p>
+        </section>
     </section>
+    <section>
+        <h2>Fingerprinting mitigation levels of success</h2>
+        <p>There are also different levels of success in addressing browser fingerprinting:</p>
+        <ul>
+        <li>Decreased fingerprinting surface:</li>
+        <li>Increased anonymity set: </li>
+        <li>Client-preventable fingerprinting: </li>
+        <li>Externally detectable fingerprinting: </li>
+        </ul>
+    </section>
+    </section>
+
+
+    <section>
+        <h2 id="types_of_fingerprinting">Types of fingerprinting</h2>
+        <section><h3 id="passive">Passive</h3></section>
+        <section><h3 id="active">Active</h3></section>
+        <section><h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3></section>
+    </section>
+
+    <section>
+        <h2 id="mitigations_and_guidance">Mitigations and guidance</h2>
+
+        <section><h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3></section>
+        <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
+        <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3></section>
+    </section>
+    
+    <section>
+        <h2 id="research">Research</h2>
+        <p>[What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?]</p>
+    </section>    
     
     <section class='appendix'>
       <h2>Acknowledgements</h2>
