@@ -76,7 +76,7 @@
     <section>
       <h2>What is fingerprinting?</h2>
       <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
-      <p>(A more detailed list of types of fingerprinting is included below.)</p>
+      <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[IAB-PRIVACY-CONSIDERATIONS]].</p>
     
         <section>
         <h2 id="privacy_threat_models">Privacy threat models</h2>
@@ -110,9 +110,15 @@
 
     <section>
         <h2 id="types_of_fingerprinting">Types of fingerprinting</h2>
-        <section><h3 id="passive">Passive</h3></section>
-        <section><h3 id="active">Active</h3></section>
-        <section><h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3></section>
+        <section><h3 id="passive">Passive</h3>
+          <p>More specifically, <dfn>passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executing on the client side.</p>
+          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests) and the set of HTTP request headers and the IP address and other network-level information. The <a href="http://tools.ietf.org/html/rfc2616#section-14.43">User-Agent string</a>, for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the user agent string and IP address will commonly uniquely identify a particular user's browser [[NDSS-FINGERPRINTING]].</p>
+        </section>
+        <section><h3 id="active">Active</h3>
+          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size or screen resolution, enumerating fonts or plug-ins, or rendering and then accessing graphical patterns. 
+        </section>
+        <section><h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3>
+        </section>
     </section>
 
     <section>
@@ -125,7 +131,13 @@
     
     <section>
         <h2 id="research">Research</h2>
-        <p>[What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?]</p>
+        <p><em>What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?</em></p>
+        <ul>
+          <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010. <br> <a href="https://panopticlick.eff.org/">panopticlick.eff.org</a></li>
+          <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
+          <li>Yen, Ting-Fang, et al. "<a href="http://www.rsasecurity.ch/rsalabs/staff/bios/tfyen/publications/NDSS12-HostTracking.pdf">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
+          <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <em>Proceedings of W2SP</em> (2012).</li>
+        </ul>
     </section>    
     
     <section class='appendix'>
