@@ -79,20 +79,31 @@
       <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[IAB-PRIVACY-CONSIDERATIONS]].</p>
     
         <section>
-        <h2 id="privacy_threat_models">Privacy threat models</h2>
+        <h2 id="privacy_threat_models">Privacy threat models and vulnerabilities</h2>
 
-        <p>Browser fingerprinting is a potential threat to privacy on the Web. This document does not attempt to provide a single unifying definition of privacy, but we note concerns about loss of anonymity and unexpected correlation of online activity.</p>
+        <p>Browser fingerprinting can be used as a security measure (e.g. as means of authenticating the user). However, fingerprinting is also a potential threat to users' privacy on the Web. This document does not attempt to provide a single unifying definition of "privacy" or "personal data", but we highlight how browser fingerprinting might impact users' privacy. For example, browser fingerprinting can be used to:</p>
+        <ul>
+          <li>identify a user</li>
+          <li>track and correlate a user’s browsing activity within and across sessions</li>
+          <li>collect information from which inferences can be drawn about a user</li>
+        </ul>
 
-        <p>Following from the practice of security threat model analysis, we note that there are distinct models of privacy threats for fingerprinting. Defenses against these threats differ, depending on the kind of user and concern.</p>
+        <p>The privacy implications associated with each use case are discussed below. Following from the practice of security threat model analysis, we note that there are distinct models of privacy threats for fingerprinting. Defenses against these threats differ, depending on the particular privacy implication and the threat model of the user.</p>
 
         <section>
-            <h3>Personal safety and anonymous browsing</h3>
-            <p>For some users, personal physical safety can be impacted if their online activities can be associated with their real-world identity &#8212; for example, a political author under an unfriendly regime. Correlation of activity across sites (using a common fingerprint) might allow an attacker to connect a name to an online pseudonym. Such users might employ onion routing systems such as Tor to limit network-level linkability but still face the danger of browser-fingerprinting to correlate their Web-based activity.</p>
+          <h3>Identify a user</h3>
+          <p>There are many reasons why users might wish to remain anonymous or unidentified online, including: concerns about surveillance, personal physical safety, concerns about discrimination against them based on what they read or write when using the Web. When a browser fingerprint is correlated with identifying information (like a real name), an application or service provider may be able to identify an otherwise pseudonymous user.</p>
+          <p>Users concerned about physical safety from, for example, a governmental adversary might employ onion routing systems such as Tor to limit network-level linkability but still face the danger of browser fingerprinting to correlate their Web-based activity.</p>
         </section>
         
         <section>
-            <h3>Unexpected correlation of browsing activity</h3>
-            <p>Fingerprinting provides privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern is heightened because tools such as clearing cookies do not prevent or &#8220;re-set&#8221; correlation done via browser fingerprinting.</p>
+          <h3>Unexpected correlation of browsing activity</h3>
+          <p>Fingerprinting provides privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent or &#8220;re-set&#8221; correlation done via browser fingerprinting.</p>
+        </section>
+        
+        <section>
+          <h3>Inferences about a user</h3>
+          <p>The observable characteristics used for browser fingerprinting can themselves reveal information from which inferences can be drawn about a user. For example, the OS version and CPU information might be used to draw inferences about a user’s purchasing power or proclivity (<a href="#wsj-orbitz">for example</a>). Users may consider this an unwelcome intrusion into their privacy even if they remain unidentified. Additionally, decisions might be made based on these inferences (e.g. which offers to display and at what price) that users perceive as discriminatory and an instance of being singled out and treated differently. This intrusion is compounded when browser fingerprints are correlated with user credentials, purchasing histories and other information about the user (e.g. cross-site browsing histories).</p>
         </section>
     </section>
     <section>
@@ -137,13 +148,14 @@
           <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
           <li>Yen, Ting-Fang, et al. "<a href="http://www.rsasecurity.ch/rsalabs/staff/bios/tfyen/publications/NDSS12-HostTracking.pdf">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
           <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <em>Proceedings of W2SP</em> (2012).</li>
+          <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://online.wsj.com/article/SB10001424052702304458604577488822667325882.html">On Orbitz, Mac Users Steered to Pricier Hotels</a>". Wall Street Journal, August 23, 2012.</li>
         </ul>
     </section>    
     
     <section class='appendix'>
       <h2>Acknowledgements</h2>
       <p>
-        Many thanks to Robin Berjon for ReSpec and to Tobie Langel for Github advice.
+        Many thanks to Robin Berjon for ReSpec and to Tobie Langel for Github advice; to the <a href="http://www.w3.org/Privacy/">Privacy Interest Group</a> for review; and to Christine Runnegar for contributions.
       </p>
     </section>
   </body>
