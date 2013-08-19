@@ -69,7 +69,7 @@
       
       var biblioExtensions = {
         "EVERCOOKIE": {
-          "authors": ["S. Kamkar"],
+          "authors": ["Samy Kamkar"],
           "href": "http://samy.pl/evercookie/",
           "title": "evercookie - virtually irrevocable persistent cookies",
           "date": "September 2010"
@@ -96,6 +96,16 @@
           "date": "July 2013",
           "status": "RFC",
           "publisher": "IETF"
+        },
+        "WEBSTORAGE-user-tracking": {
+          "href": "http://www.w3.org/TR/2013/REC-webstorage-20130730/#user-tracking",
+          "title": "Web Storage > Privacy > User tracking",
+          "date": "July 2013",
+          "authors": [
+            "Ian Hickson"
+          ],
+          "status": "Rec",
+          "publisher": "W3C"
         }
       };
       
@@ -191,7 +201,12 @@
           <p>The difference between these requirements recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
         </section>
         <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
-        <section><h3>Clearing all local state</h3></section>
+        <section>
+          <h3>Clearing all local state</h3>
+          <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of cookie-like fingerprinting. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource). If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), a specification SHOULD NOT include this cookie-like feature.</p>
+          <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior. In particular, specification authors SHOULD clearly note where state is being maintained and could be queried and SHOULD provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier.</p>
+          <p>Though not strictly browser fingerprinting, there are other privacy concerns regarding user tracking for features that provide local storage of data. Mitigations suggested in the Web Storage API specification include: white-listing, black-listing, expiration and secure deletion [[WEBSTORAGE-user-tracking]].</p>
+        </section>
         <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3></section>
     </section>
     
