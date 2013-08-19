@@ -66,6 +66,47 @@
           // Team Contact.
           wgPatentURI:  "",
       };
+      
+      var biblioExtensions = {
+        "EVERCOOKIE": {
+          "authors": ["S. Kamkar"],
+          "href": "http://samy.pl/evercookie/",
+          "title": "evercookie - virtually irrevocable persistent cookies",
+          "date": "September 2010"
+        },
+        "NDSS-FINGERPRINTING": {
+          "authors": ["Ting-Fang Yen", "Yinglian Xie", "Fang Yu", "Roger Peng Yu", "Martin Abadi"],
+          "href": "http://research.microsoft.com/apps/pubs/default.aspx?id=156901",
+          "title": "Host Fingerprinting and Tracking on the Web: Privacy and Security Implications",
+          "date": "February 2012",
+          "publisher": "In Proceedings of the Network and Distributed System Security Symposium (NDSS)"
+        },
+        "RFC6973": {
+          "authors": [
+              "A. Cooper",
+              "H. Tschofenig",
+              "B. Aboba",
+              "J. Peterson",
+              "J. Morris",
+              "M. Hansen",
+              "R. Smith"
+          ],
+          "href": "http://www.rfc-editor.org/rfc/rfc6973.txt",
+          "title": "Privacy Considerations for Internet Protocols",
+          "date": "July 2013",
+          "status": "RFC",
+          "publisher": "IETF"
+        }
+      };
+      
+      // trap the original and then use this function in order to insert references specific to this document
+      var originalSetBerjonBiblio = window.setBerjonBiblio;
+      window.setBerjonBiblio = function(args) {
+        for (key in biblioExtensions) {
+          args[key] = biblioExtensions[key];
+        }        
+        originalSetBerjonBiblio(args);
+      };
     </script>
   </head>
   <body>
@@ -76,10 +117,10 @@
     <section>
       <h2>What is fingerprinting?</h2>
       <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
-      <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[IAB-PRIVACY-CONSIDERATIONS]].</p>
+      <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[RFC6973]].</p>
     
         <section>
-        <h2 id="privacy_threat_models">Privacy threat models and vulnerabilities</h2>
+        <h2 id="privacy_threat_models">Privacy impacts and threat models</h2>
 
         <p>Browser fingerprinting can be used as a security measure (e.g. as means of authenticating the user). However, fingerprinting is also a potential threat to users' privacy on the Web. This document does not attempt to provide a single unifying definition of "privacy" or "personal data", but we highlight how browser fingerprinting might impact users' privacy. For example, browser fingerprinting can be used to:</p>
         <ul>
@@ -121,14 +162,19 @@
 
     <section>
         <h2 id="types_of_fingerprinting">Types of fingerprinting</h2>
-        <section><h3 id="passive">Passive</h3>
-          <p>More specifically, <dfn>passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executing on the client side.</p>
+        <section>
+          <h3 id="passive">Passive</h3>
+          <p><dfn>Passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executing on the client side.</p>
           <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests) and the set of HTTP request headers and the IP address and other network-level information. The <a href="http://tools.ietf.org/html/rfc2616#section-14.43">User-Agent string</a>, for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the user agent string and IP address will commonly uniquely identify a particular user's browser [[NDSS-FINGERPRINTING]].</p>
         </section>
-        <section><h3 id="active">Active</h3>
-          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size or screen resolution, enumerating fonts or plug-ins, or rendering and then accessing graphical patterns. 
+        <section>
+          <h3 id="active">Active</h3>
+          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, or rendering graphical patterns.</p>
         </section>
-        <section><h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3>
+        <section>
+          <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3>
+          <p>Users, user agents and devices may also be re-identified by a site that first sets and later retrieves state stored by a user agent or device. This <dfn>cookie-like fingerprinting</dfn> allows re-identification of a user or inferences about a user in the same way that HTTP cookies allow state management for the stateless HTTP protocol [[RFC6265]].</p>
+          <p>Cookie-like fingerprinting can also circumvent user attempts to limit or clear cookies stored by the user agent, as demonstrated by the "evercookie" implementation [[EVERCOOKIE]]. Where state is maintained across user agents (as in the case of common plugins with local storage), across devices (as in the case of certain browser syncing mechanisms) or across software upgrades, cookie-like fingerprinting can allow re-identification of users, user agents or devices where active and passive fingerprinting might not.</p>
         </section>
     </section>
 
@@ -137,6 +183,7 @@
 
         <section><h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3></section>
         <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
+        <section><h3>Clearing all local state</h3></section>
         <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3></section>
     </section>
     
@@ -148,6 +195,7 @@
           <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
           <li>Yen, Ting-Fang, et al. "<a href="http://www.rsasecurity.ch/rsalabs/staff/bios/tfyen/publications/NDSS12-HostTracking.pdf">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
           <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <em>Proceedings of W2SP</em> (2012).</li>
+          <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="http://w2spconf.com/2011/papers/jspriv.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In Web 2.0 Security and Privacy, 2011.</li>
           <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://online.wsj.com/article/SB10001424052702304458604577488822667325882.html">On Orbitz, Mac Users Steered to Pricier Hotels</a>". Wall Street Journal, August 23, 2012.</li>
         </ul>
     </section>    
