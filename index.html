@@ -180,8 +180,16 @@
 
     <section>
         <h2 id="mitigations_and_guidance">Mitigations and guidance</h2>
-
-        <section><h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3></section>
+        <section>
+          <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
+          <p>The <dfn>fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity. Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement, but detailed granularity in feature detection increases the fingerprinting surface of a user agent. (An attacker can test for many features on every visitor's browser and might uniquely identify a user by the exact set of features enabled.)</p>
+          <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its likely implementations and the entropy of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, the following requirements provide guidance for this balance:</p>
+          <ul>
+            <li>Specifications MUST NOT increase the surface for passive fingerprinting unless a feature cannot reasonably be designed in another way.</li>
+            <li>Specifications SHOULD NOT increase the surface for active fingerprinting if the same functionality could be accomplished without increasing the surface.</li>
+          </ul>
+          <p>The difference between these requirements recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
+        </section>
         <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
         <section><h3>Clearing all local state</h3></section>
         <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3></section>
