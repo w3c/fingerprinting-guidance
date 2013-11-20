@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fingerprinting Guidance for Specification Authors</title>
+    <title>Fingerprinting Guidance for Web Specification Authors</title>
     <meta charset='utf-8'>
     <script src='http://darobin.github.com/respec/builds/respec-w3c-common.js' class='remove'></script>
     <script class='remove'>
@@ -65,59 +65,71 @@
           // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
           // Team Contact.
           wgPatentURI:  "",
+          
+          localBiblio: {
+            "EVERCOOKIE": {
+              "authors": ["Samy Kamkar"],
+              "href": "http://samy.pl/evercookie/",
+              "title": "evercookie - virtually irrevocable persistent cookies",
+              "date": "September 2010"
+            },
+            "NDSS-FINGERPRINTING": {
+              "authors": ["Ting-Fang Yen", "Yinglian Xie", "Fang Yu", "Roger Peng Yu", "Martin Abadi"],
+              "href": "http://research.microsoft.com/apps/pubs/default.aspx?id=156901",
+              "title": "Host Fingerprinting and Tracking on the Web: Privacy and Security Implications",
+              "date": "February 2012",
+              "publisher": "In Proceedings of the Network and Distributed System Security Symposium (NDSS)"
+            },
+            "RFC6973": {
+              "authors": [
+                  "A. Cooper",
+                  "H. Tschofenig",
+                  "B. Aboba",
+                  "J. Peterson",
+                  "J. Morris",
+                  "M. Hansen",
+                  "R. Smith"
+              ],
+              "href": "http://www.rfc-editor.org/rfc/rfc6973.txt",
+              "title": "Privacy Considerations for Internet Protocols",
+              "date": "July 2013",
+              "status": "RFC",
+              "publisher": "IETF"
+            },
+            "WEBSTORAGE-user-tracking": {
+              "href": "http://www.w3.org/TR/2013/REC-webstorage-20130730/#user-tracking",
+              "title": "Web Storage > Privacy > User tracking",
+              "date": "July 2013",
+              "authors": [
+                "Ian Hickson"
+              ],
+              "status": "Rec",
+              "publisher": "W3C"
+            },
+            "TRACKING-DNT": {
+              "href": "http://www.w3.org/TR/tracking-dnt/",
+              "title": "Tracking Preference Expression (DNT)",
+              "date": "September 2013",
+              "authors": [
+                "Roy Fielding", "David Singer"
+              ],
+              "status": "WD",
+              "publisher": "W3C"
+            },
+            "TRACKING-COMPLIANCE": {
+              "href": "http://www.w3.org/TR/tracking-compliance/",
+              "title": "Tracking Compliance and Scope",
+              "date": "September 2013",
+              "authors": [
+                "Justin Brookman", "Heather West", "Sean Harvey", "Erica Newland"
+              ],
+              "status": "WD",
+              "publisher": "W3C"
+            }
+            
+          }
       };
-      
-      var biblioExtensions = {
-        "EVERCOOKIE": {
-          "authors": ["Samy Kamkar"],
-          "href": "http://samy.pl/evercookie/",
-          "title": "evercookie - virtually irrevocable persistent cookies",
-          "date": "September 2010"
-        },
-        "NDSS-FINGERPRINTING": {
-          "authors": ["Ting-Fang Yen", "Yinglian Xie", "Fang Yu", "Roger Peng Yu", "Martin Abadi"],
-          "href": "http://research.microsoft.com/apps/pubs/default.aspx?id=156901",
-          "title": "Host Fingerprinting and Tracking on the Web: Privacy and Security Implications",
-          "date": "February 2012",
-          "publisher": "In Proceedings of the Network and Distributed System Security Symposium (NDSS)"
-        },
-        "RFC6973": {
-          "authors": [
-              "A. Cooper",
-              "H. Tschofenig",
-              "B. Aboba",
-              "J. Peterson",
-              "J. Morris",
-              "M. Hansen",
-              "R. Smith"
-          ],
-          "href": "http://www.rfc-editor.org/rfc/rfc6973.txt",
-          "title": "Privacy Considerations for Internet Protocols",
-          "date": "July 2013",
-          "status": "RFC",
-          "publisher": "IETF"
-        },
-        "WEBSTORAGE-user-tracking": {
-          "href": "http://www.w3.org/TR/2013/REC-webstorage-20130730/#user-tracking",
-          "title": "Web Storage > Privacy > User tracking",
-          "date": "July 2013",
-          "authors": [
-            "Ian Hickson"
-          ],
-          "status": "Rec",
-          "publisher": "W3C"
-        }
-      };
-      
-      // trap the original and then use this function in order to insert references specific to this document
-      var originalSetBerjonBiblio = window.setBerjonBiblio;
-      window.setBerjonBiblio = function(args) {
-        for (key in biblioExtensions) {
-          args[key] = biblioExtensions[key];
-        }        
-        originalSetBerjonBiblio(args);
-      };
-    </script>
+      </script>
   </head>
   <body>
     <section id='abstract'>
@@ -155,17 +167,17 @@
         <section>
           <h3>Inferences about a user</h3>
           <p>The observable characteristics used for browser fingerprinting can themselves reveal information from which inferences can be drawn about a user. For example, the OS version and CPU information might be used to draw inferences about a user’s purchasing power or proclivity (<a href="#wsj-orbitz">for example</a>). Users may consider this an unwelcome intrusion into their privacy even if they remain unidentified. Additionally, decisions might be made based on these inferences (e.g. which offers to display and at what price) that users perceive as discriminatory and an instance of being singled out and treated differently. This intrusion is compounded when browser fingerprints are correlated with user credentials, purchasing histories and other information about the user (e.g. cross-site browsing histories).</p>
+          <p class="note">Editorial question: Is this in scope for browser fingerprinting? Or is this just a general privacy concern about leakage of information via observable characteristics?</p>
         </section>
     </section>
     <section>
         <h2>Fingerprinting mitigation levels of success</h2>
         <p>There are also different levels of success in addressing browser fingerprinting:</p>
-        <ul>
-        <li>Decreased fingerprinting surface:</li>
-        <li>Increased anonymity set: </li>
-        <li>Client-preventable fingerprinting: </li>
-        <li>Externally detectable fingerprinting: </li>
-        </ul>
+        <dl>
+        <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
+        <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
+        <dt>Detectable fingerprinting</dt><dd>Making (in particular, client-side) fingerprinting observable to the user agent or some other party, so that the user agent might block it or a crawler can determine that it's happening.</dd>
+        </dl>
     </section>
     </section>
 
@@ -189,25 +201,33 @@
     </section>
 
     <section>
-        <h2 id="mitigations_and_guidance">Mitigations and guidance</h2>
+        <h2 id="mitigations_and_guidance">Mitigations</h2>
         <section>
           <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
           <p>The <dfn>fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity. Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement, but detailed granularity in feature detection increases the fingerprinting surface of a user agent. (An attacker can test for many features on every visitor's browser and might uniquely identify a user by the exact set of features enabled.)</p>
           <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its likely implementations and the entropy of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, the following requirements provide guidance for this balance:</p>
           <ul>
             <li>Specifications MUST NOT increase the surface for passive fingerprinting unless a feature cannot reasonably be designed in another way.</li>
-            <li>Specifications SHOULD NOT increase the surface for active fingerprinting if the same functionality could be accomplished without increasing the surface.</li>
+            <li>Specifications SHOULD NOT increase the surface for active fingerprinting if comparable functionality could be accomplished without increasing the surface.</li>
           </ul>
           <p>The difference between these requirements recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
         </section>
         <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
         <section>
+          <h3>Detectability</h3>
+          <p>Where a client-side API provides some fingerprinting surface, authors can still mitigate the privacy concerns via detectability. If client-side fingerprinting activity is to some extent distinguishable from functional use of APIs, user agent implementations may have an opportunity to prevent ongoing fingerprinting or make it observable to users and external researchers (including academics or relevant regulators) may be able to detect and investigate the use of fingerprinting.</p>
+          <p>Following the basic principle of data minimization, authors SHOULD design APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.</p>
+          <p class="note">TODO: An example would probably be very useful here.</p>
+        </section>
+        <section>
           <h3>Clearing all local state</h3>
           <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of cookie-like fingerprinting. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource). If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), a specification SHOULD NOT include this cookie-like feature.</p>
-          <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior. In particular, specification authors SHOULD clearly note where state is being maintained and could be queried and SHOULD provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier.</p>
+          <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior. In particular, specification authors SHOULD clearly note where state is being maintained and could be queried and SHOULD provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier. Authors SHOULD NOT design functionality whose utility depends on saving and later querying data on the client beyond a user's clearing their local state.</p>
           <p>Though not strictly browser fingerprinting, there are other privacy concerns regarding user tracking for features that provide local storage of data. Mitigations suggested in the Web Storage API specification include: white-listing, black-listing, expiration and secure deletion [[WEBSTORAGE-user-tracking]].</p>
         </section>
-        <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3></section>
+        <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3>
+          Expressions of, and compliance with, a Do Not Track signal may not prevent or inhibit browser fingerprinting, but may mitigate some user concerns about fingerprinting, specifically around tracking as defined in those specifications [[TRACKING-DNT]] [[TRACKING-COMPLIANCE]] and as implemented by services engaged in fingerprinting that voluntarily comply with those user preferences. This mitigation is included here for completeness; DNT standardization and adoption is ongoing.
+        </section>
     </section>
     
     <section>
@@ -220,6 +240,8 @@
           <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <em>Proceedings of W2SP</em> (2012).</li>
           <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="http://w2spconf.com/2011/papers/jspriv.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In Web 2.0 Security and Privacy, 2011.</li>
           <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://online.wsj.com/article/SB10001424052702304458604577488822667325882.html">On Orbitz, Mac Users Steered to Pricier Hotels</a>". Wall Street Journal, August 23, 2012.</li>
+          <li id="FPDetective">Gunes Acar et al. "<a href="http://dl.acm.org/citation.cfm?id=2516674">FPDetective: dusting the web for fingerprinters</a>." In CCS '13 Proceedings of the 2013 ACM SIGSAC conference on Computer &amp; communications security.</li>
+          <li>Nikiforakis, Nick, et al. "<a href="http://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." IEEE Symposium on Security and Privacy. 2013.</li>
         </ul>
     </section>    
     
