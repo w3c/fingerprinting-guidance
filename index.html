@@ -130,6 +130,12 @@
           }
       };
       </script>
+      <style type="text/css" media="screen">
+        img.fingerprint {
+          float: left; 
+          margin-left: -25px;
+        }
+      </style>
   </head>
   <body>
     <section id="abstract">
@@ -167,20 +173,10 @@
         <section>
           <h3>Inferences about a user</h3>
           <p>The observable characteristics used for browser fingerprinting can themselves reveal information from which inferences can be drawn about a user. For example, the OS version and CPU information might be used to draw inferences about a user’s purchasing power or proclivity (<a href="#wsj-orbitz">for example</a>). Users may consider this an unwelcome intrusion into their privacy even if they remain unidentified. Additionally, decisions might be made based on these inferences (e.g. which offers to display and at what price) that users perceive as discriminatory and an instance of being singled out and treated differently. This intrusion is compounded when browser fingerprints are correlated with user credentials, purchasing histories and other information about the user (e.g. cross-site browsing histories).</p>
-          <p class="note">Editorial question: Is this in scope for browser fingerprinting? Or is this just a general privacy concern about leakage of information via observable characteristics?</p>
+          <p class="note">Is this in scope for browser fingerprinting? Or is this just a general privacy concern about leakage of information via observable characteristics?</p>
         </section>
     </section>
-    <section>
-        <h2>Fingerprinting mitigation levels of success</h2>
-        <p>There are also different levels of success in addressing browser fingerprinting:</p>
-        <dl>
-        <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
-        <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
-        <dt>Detectable fingerprinting</dt><dd>Making (in particular, client-side) fingerprinting observable to the user agent or some other party, so that the user agent might block it or a crawler can determine that it's happening.</dd>
-        </dl>
     </section>
-    </section>
-
 
     <section>
         <h2 id="types_of_fingerprinting">Types of fingerprinting</h2>
@@ -201,6 +197,31 @@
     </section>
 
     <section>
+      <h2 id="feasibility">Feasibility</h2>
+      
+      <section>
+          <h2>Fingerprinting mitigation levels of success</h2>
+          <p>There are different levels of success in addressing browser fingerprinting:</p>
+          <dl>
+          <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
+          <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
+          <dt>Detectable fingerprinting</dt><dd>Making (in particular, client-side) fingerprinting observable to the user agent or some other party, so that the user agent might block it or a crawler can determine that it's happening.</dd>
+          </dl>
+      </section>
+      <section>
+        <h2>A lost cause?</h2>
+        <p>
+          Given the advances in techniques for browser fingerprinting (see the <a href="#research">Research</a> section below), particularly in active fingerprinting, many have asked whether browser fingerprinting is a "lost cause" and mitigations therefore not worth pursuing during the design process. This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like fingerprinting can be documented to enable clearing local state.
+        </p>
+        <p>
+          However, the mitigations recommended here are simply mitigations, not solutions. Research in browser fingerprinting continues and even with the mitigations described here, users should not rely on sites being completely unable to recognize or correlate traffic, most especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack. In order to mitigate the risk as a whole, fingerprinting must be considered during the design and development of all specifications.
+        </p>
+        <p>
+          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary.
+        </p>
+      </section>
+    </section>
+    <section>
         <h2 id="mitigations_and_guidance">Mitigations</h2>
         <section>
           <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
@@ -211,6 +232,13 @@
             <li>Specifications SHOULD NOT increase the surface for active fingerprinting if comparable functionality could be accomplished without increasing the surface.</li>
           </ul>
           <p>The difference between these requirements recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
+          <p>
+            <img src="http://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint">
+            Where a feature does contribute to the fingerprinting surface, authors SHOULD indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is. 
+          </p>
+          <p class="note">
+            This practice (and this image) is drawn from the HTML5 specification, which uses it throughout. Can we get feedback from the HTML WG or from readers of that specification as to whether the practice has been useful?
+          </p>
         </section>
         <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
         <section>
