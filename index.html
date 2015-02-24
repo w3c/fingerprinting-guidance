@@ -141,7 +141,10 @@
     <section id="abstract">
       Exposure of settings and characteristics of browsers can impact user privacy by allowing for browser fingerprinting. This document defines different types of fingerprinting, considers distinct levels of mitigation for the related privacy risks and provides guidance for Web specification authors on how to balance these concerns when designing new Web features.
     </section>
-    
+    <section id="sotd">
+      This is a draft of a document intended to be published as an Interest Group Note. Constructive feedback of all kinds is welcomed; feel free to contact the editor directly or send comments to the <a href="mailto:public-privacy@w3.org">public-privacy</a> mailing list (<a href="https://lists.w3.org/Archives/Public/public-privacy/">public archives</a>).
+    </section>
+    <section id="bp-summary"></section>
     <section>
       <h2>What is fingerprinting?</h2>
       <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
@@ -168,6 +171,7 @@
         <section>
           <h3>Unexpected correlation of browsing activity</h3>
           <p>Fingerprinting provides privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent or &#8220;re-set&#8221; correlation done via browser fingerprinting.</p>
+          <p>Fingerprinting also allows for tracking across <a>origins</a>: different sites may be able to combine information about a single user even where a cookie policy would block accessing of the cookies between origins, because the fingerprinting is relatively unique and the same for all origins.</p>
         </section>
         
         <section>
@@ -227,49 +231,139 @@
           <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
           <p>The <dfn>fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity. Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement, but detailed granularity in feature detection increases the fingerprinting surface of a user agent. (An attacker can test for many features on every visitor's browser and might uniquely identify a user by the exact set of features enabled.)</p>
           <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its likely implementations and the entropy of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, the following requirements provide guidance for this balance:</p>
-          <ul>
-            <li>Specifications MUST NOT increase the surface for passive fingerprinting unless a feature cannot reasonably be designed in another way.</li>
-            <li>Specifications SHOULD NOT increase the surface for active fingerprinting if comparable functionality could be accomplished without increasing the surface.</li>
-          </ul>
-          <p>The difference between these requirements recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
-          <p>
-            <img src="http://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint">
-            Where a feature does contribute to the fingerprinting surface, authors SHOULD indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is. 
-          </p>
-          <p class="note">
+          
+          <div class="practice">
+            <p>
+              <span id="avoid-passive-increases" class="practicelab">Avoid any increase to the surface for passive fingerprinting.</span>
+            </p>
+            <p class="practicedesc">
+              Unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be prevented.
+            </p>
+          </div>
+          <div class="practice">
+            <p>
+              <span id="avoid-active-increases" class="practicelab">Prefer functionally-comparable designs that don't increase the surface for active fingerprinting.</span>
+            </p>
+            <p class="practicedesc">
+              If comparable functionality could be accomplished without increasing the surface for active fingerprinting, prefer the less fingerprintable alternative. Defining "equivalent" or "comparable" functionality can be difficult; use your best judgment and avoid unnecessary fingerprintability.       
+            </p>
+          </div>
+          
+          <p>The difference between these practices recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
+          
+          <div class="practice">
+            <p>
+              <span id="mark-fingerprinting" class="practicelab">Mark features that contribute to fingerprintability.</span>
+            </p>
+            <p class="practicedesc">
+              <img src="http://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint">
+              Where a feature does contribute to the fingerprinting surface, indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is.            
+            </p>
+            <p class="note">
             This practice (and this image) is drawn from the HTML5 specification, which uses it throughout. Can we get feedback from the HTML WG or from readers of that specification as to whether the practice has been useful?
-          </p>
+            </p>
+          </div>
         </section>
-        <section><h3 id="a_standardized_profile">A standardized profile?</h3></section>
+        <section>
+			<h3 id="a_standardized_profile">A standardized profile?</h3>
+			<p>
+				TODO: why it would be useful to have standardized profile values, where possible
+			</p>
+      <p>
+        TODO: why we don't typically recommend that we try to do this across user agent implementations
+				... that is, why we're not advocating for getting rid of the User Agent string
+			</p>
+      <p>
+        TODO: explain why randomization probably isn't helpful
+      </p>
+      <div class="practice">
+        <p>
+          <span id="specify-ordering" class="practicelab">Specify orderings and non-functional differences.</span>
+        </p>
+        <p class="practicedesc">
+          To reduce unnecessary entropy, specify aspects of API return values and behavior that don't contribute to functional differences. For example, if the ordering of return values in a list has no semantic value, specify a particular ordering (alphabetical order by a defined algorithm, for example) so that incidental differences don't expose fingerprinting surface.
+        </p>
+      </div>
+		</section>
         <section>
           <h3>Detectability</h3>
           <p>Where a client-side API provides some fingerprinting surface, authors can still mitigate the privacy concerns via detectability. If client-side fingerprinting activity is to some extent distinguishable from functional use of APIs, user agent implementations may have an opportunity to prevent ongoing fingerprinting or make it observable to users and external researchers (including academics or relevant regulators) who may be able to detect and investigate the use of fingerprinting.</p>
-          <p>Following the basic principle of data minimization, authors SHOULD design APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.</p>
-          <p class="note">TODO: An example would probably be very useful here.</p>
+          
+          <div class="practice">
+            <p>
+              <span id="api-minimization" class="practicelab">Design APIs to access only the entropy necessary.</span>
+            </p>
+            <p class="practicedesc">
+              Following the basic principle of <a>data minimization</a>, design your APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.
+            </p>
+            <p class="note">TODO: An example would probably be very useful here.</p>
+          </div>     
+          
+          <div class="practice">
+            <p>
+              <span id="anticipate-disabled" class="practicelab">Anticipate disabled functionality for the fingerprinting-conscious.</span>
+            </p>
+            <p class="practicedesc">
+              If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the Tor Browser) are going to be compelled to disable those features for certain privacy-conscious users. Following the principle of <a>progressive enhancement</a>, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
+            </p>
+          </div>     
         </section>
         <section>
           <h3>Clearing all local state</h3>
-          <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of cookie-like fingerprinting. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource). If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), a specification SHOULD NOT include this cookie-like feature.</p>
-          <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior. In particular, specification authors SHOULD clearly note where state is being maintained and could be queried and SHOULD provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier. Authors SHOULD NOT design functionality whose utility depends on saving and later querying data on the client beyond a user's clearing their local state.</p>
+          <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of cookie-like fingerprinting. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource).</p>
+          <div class="practice">
+            <p>
+              <span id="no-new-cookies" class="practicelab">Avoid new cookie-like local state mechanisms.</span>
+            </p>
+            <p class="practicedesc">
+              If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), avoid creating a new cookie-like feature. Can the functionality be accomplished with existing HTTP cookies or an existing JavaScript local storage API?
+            </p>
+          </div>
+          <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior; in particular, you can help implementers prevent "permanent", "zombie" or "evercookies".</p>
+          <div class="practice">
+            <p>
+              <span id="mark-cookie-like" class="practicelab">Highlight any local state mechanisms to enable simultaneous clearing.</span>
+            </p>
+            <p class="practicedesc">
+              Clearly note where state is being maintained and could be queried and provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier. As a result, your design should not rely on saving and later querying data on the client beyond a user's clearing all local state. That is, you should not expect any local state information to be permanent.
+            </p>
+          </div>
           <p>Though not strictly browser fingerprinting, there are other privacy concerns regarding user tracking for features that provide local storage of data. Mitigations suggested in the Web Storage API specification include: white-listing, black-listing, expiration and secure deletion [[WEBSTORAGE-user-tracking]].</p>
         </section>
         <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3>
-          Expressions of, and compliance with, a Do Not Track signal may not prevent or inhibit browser fingerprinting, but may mitigate some user concerns about fingerprinting, specifically around tracking as defined in those specifications [[TRACKING-DNT]] [[TRACKING-COMPLIANCE]] and as implemented by services engaged in fingerprinting that voluntarily comply with those user preferences. This mitigation is included here for completeness; DNT standardization and adoption is ongoing.
+          <p>Expressions of, and compliance with, a Do Not Track signal may not prevent or inhibit browser fingerprinting, but may mitigate some user concerns about fingerprinting, specifically around tracking as defined in those specifications [[TRACKING-DNT]] [[TRACKING-COMPLIANCE]] and as implemented by services engaged in fingerprinting that voluntarily comply with those user preferences.</p>
+          
+          <p>This mitigation is included here for completeness: DNT standardization and adoption is ongoing. The use of DNT in this way should not require any work for your specification, unless for some reason you need to specify a certain specific DNT behavior for your functionality.</p>
         </section>
     </section>
     
     <section>
         <h2 id="research">Research</h2>
+        <p><em>Some browser developers maintain pages on browser fingerprinting, including: potential mitigations or modifications necessary to decrease the surface of that browser engine; different vectors that can be used for fingerprinting; potential future work. These are not cheery, optimistic documents.</em></p>
+        <ul>
+          <li>Janc, Artur and Michal Zalewski. "<a href="https://sites.google.com/a/chromium.org/dev/Home/chromium-security/client-identification-mechanisms#TOC-Fingerprinting-prevention-and-detection-challenges">Technical analysis of client identification mechanisms</a>". The Chromium Projects.</li>
+          <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
+          <li><a href="https://wiki.mozilla.org/Fingerprinting">Mozilla Wiki: Fingerprinting</a></li>
+        </ul>
+        
         <p><em>What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?</em></p>
         <ul>
-          <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010. <br> <a href="https://panopticlick.eff.org/">panopticlick.eff.org</a></li>
-          <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
+          <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010.</li>
           <li>Yen, Ting-Fang, et al. "<a href="http://www.rsasecurity.ch/rsalabs/staff/bios/tfyen/publications/NDSS12-HostTracking.pdf">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
           <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <em>Proceedings of W2SP</em> (2012).</li>
           <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="http://w2spconf.com/2011/papers/jspriv.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In Web 2.0 Security and Privacy, 2011.</li>
           <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://online.wsj.com/article/SB10001424052702304458604577488822667325882.html">On Orbitz, Mac Users Steered to Pricier Hotels</a>". Wall Street Journal, August 23, 2012.</li>
           <li id="FPDetective">Gunes Acar et al. "<a href="http://dl.acm.org/citation.cfm?id=2516674">FPDetective: dusting the web for fingerprinters</a>." In CCS '13 Proceedings of the 2013 ACM SIGSAC conference on Computer &amp; communications security.</li>
           <li>Nikiforakis, Nick, et al. "<a href="http://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." IEEE Symposium on Security and Privacy. 2013.</li>
+        </ul>
+        
+        <h3>Testing</h3>
+        <p><em>A non-exhaustive list of sites that allow the visitor to test their configuration for fingerprintability.</em></p>
+        <ul>
+          <li><a href="https://amiunique.org/">amiunique.org</a> (INRIA)</li>
+          <li><a href="https://panopticlick.eff.org/">panopticlick.eff.org</a> (EFF)</li>
+          <li><a href="http://browserspy.dk/">BrowserSPY.dk</a></li>
+          <li><a href="http://lcamtuf.coredump.cx/p0f3/">p0f v3</a> (purely passive fingerprinting)</li>
         </ul>
     </section>    
     
