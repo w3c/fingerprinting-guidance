@@ -37,18 +37,16 @@
           // editors, add as many as you like
           // only "name" is required
           editors:  [
-              { name: "Nick Doty", url: "http://npdoty.name/",
+              { name: "Nick Doty", url: "https://npdoty.name/",
                 company: "W3C", companyURL: "http://w3.org/" },
           ],
+          otherLinks: [{
+              key: "Version history",
+              data: [{
+                value: "GitHub commit history",
+                href: "https://github.com/w3c/fingerprinting-guidance/commits/gh-pages"
+           }]}],          
 
-          // authors, add as many as you like. 
-          // This is optional, uncomment if you have authors as well as editors.
-          // only "name" is required. Same format as editors.
-
-          //authors:  [
-          //    { name: "Your Name", url: "http://example.org/",
-          //      company: "Your Company", companyURL: "http://example.com/" },
-          //],
           
           // name of the WG
           wg:           "Privacy Interest Group",
@@ -150,7 +148,6 @@
     <section id="sotd">
       This is a draft of a document intended to be published as a Note by the <a href="http://w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>). PING will collaborate with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. Constructive feedback of all kinds is welcomed; feel free to contact the editor directly or send comments to the <a href="mailto:public-privacy@w3.org">public-privacy</a> mailing list (<a href="https://lists.w3.org/Archives/Public/public-privacy/">public archives</a>).
     </section>
-    <section id="bp-summary"></section>
     <section>
       <h2>What is fingerprinting?</h2>
       <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
@@ -188,8 +185,20 @@
           </p>
         </section>
     </section>
+    <section>
+      <h2>What can we do about it?</h2>
+      <p>
+        Advances in techniques for browser fingerprinting (see <a href="#research"></a>, below), particularly in <a>active fingerprinting</a>, suggest that elimination of the capability of browser fingerprinting by a determined adversary through solely technical means that are widely deployed is implausible. However, mitigations in our technical specifications are possible, as described below (<a href="#mitigations"></a>), and may achieve different levels of success (<a href="#feasibility"></a>).
+      </p>
+      <p>
+        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack. In order to mitigate the risk as a whole, fingerprinting must be considered during the design and development of all specifications.</p>
+      <p>The TAG finding on Unsanctioned Web Tracking, including browser fingerprinting, includes description of the limitatations of technical measures and encourages minimizing and documenting new fingerprinting surface [[TAG-UNSANCTIONED]]. The best practices below detail common actions that authors of specifications for Web features can take to mitigate the privacy impacts of browser fingerprinting.
+      </p>
     </section>
-
+    </section>
+    
+    <section id="bp-summary"></section>
+    
     <section>
         <h2 id="types_of_fingerprinting">Types of fingerprinting</h2>
         <section>
@@ -199,7 +208,7 @@
         </section>
         <section>
           <h3 id="active">Active</h3>
-          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, or rendering graphical patterns.</p>
+          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, or rendering graphical patterns. Key to this distinction is that <a>active fingerprinting</a> takes place in a way that is potentially detectable on the client.</p>
         </section>
         <section>
           <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3>
@@ -221,23 +230,16 @@
           </dl>
       </section>
       <section>
-        <h2>A lost cause?</h2>
+        <h2>Feasible goals for specification authors</h2>
         <p>
-          Given the advances in techniques for browser fingerprinting (see the <a href="#research">Research</a> section below), particularly in active fingerprinting, many have asked whether browser fingerprinting is a "lost cause" and mitigations therefore not worth pursuing during the design process. This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like fingerprinting can be documented to enable clearing local state.
-        </p>
+          This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like fingerprinting can be documented to enable clearing local state.</p>
         <p>
-          However, the mitigations recommended here are simply mitigations, not solutions. Research in browser fingerprinting continues and even with the mitigations described here, users should not rely on sites being completely unable to recognize or correlate traffic, most especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack. In order to mitigate the risk as a whole, fingerprinting must be considered during the design and development of all specifications.
-        </p>
-        <p>
-          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary.
-        </p>
-        <p class="issue">
-          TODO: move to introductory section and revise, per TAG feedback
+          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means, as suggested by the TAG [[TAG-UNSANCTIONED]].
         </p>
       </section>
     </section>
     <section>
-        <h2 id="mitigations_and_guidance">Mitigations</h2>
+        <h2 id="mitigations">Mitigations</h2>
         <section>
           <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
           <p>The <dfn>fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity. Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of plugins, fonts, connected devices may provide a large fingerprinting surface with minimal functional support.</p>
@@ -315,7 +317,7 @@
           
           <div class="practice">
             <p>
-              <span id="anticipate-disabled" class="practicelab">Design for graceful degradation for privacy-conscious users or implementers.</span>
+              <span id="anticipate-disabled" class="practicelab">Enable graceful degradation for privacy-conscious users or implementers.</span>
             </p>
             <p class="practicedesc">
               If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users. Following the principle of <a>progressive enhancement</a>, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
