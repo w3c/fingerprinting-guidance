@@ -139,6 +139,10 @@
           float: left; 
           margin-left: -25px;
         }
+        ul.practicedesc {
+            margin-top: -2em;
+            padding-top: .5em;
+        }
       </style>
   </head>
   <body>
@@ -149,10 +153,12 @@
       This is a draft of a document intended to be published as a Note by the <a href="http://w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>). PING will collaborate with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. Constructive feedback of all kinds is welcomed; feel free to contact the editor directly or send comments to the <a href="mailto:public-privacy@w3.org">public-privacy</a> mailing list (<a href="https://lists.w3.org/Archives/Public/public-privacy/">public archives</a>).
     </section>
     <section>
-      <h2>What is fingerprinting?</h2>
-      <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
-      <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[RFC6973]].</p>
-    
+      <h2>Browser fingerprinting</h2>
+        <section>
+        <h2>What is fingerprinting?</h2>
+        <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
+        <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[RFC6973]].</p>
+        </section>
         <section>
         <h2 id="privacy_threat_models">Privacy impacts and threat models</h2>
 
@@ -175,7 +181,7 @@
         <section>
           <h3>Correlation of browsing activity</h3>
           <p>Browser fingerprinting provides privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
-          <p>Browser fingerprinting also allows for tracking across <a>origins</a>: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
+          <p>Browser fingerprinting also allows for tracking across <a class="externalDFN" href="http://tools.ietf.org/html/rfc6454#section-4">origins</a> [[RFC6454]]: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
         </section>
         
         <section>
@@ -307,12 +313,19 @@
               <span id="api-minimization" class="practicelab">Design APIs to access only the entropy necessary.</span>
             </p>
             <p class="practicedesc">
-              Following the basic principle of <a>data minimization</a>, design your APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.
+              Following the basic principle of <a class="externalDFN" href="https://tools.ietf.org/html/rfc6973#section-6.1">data minimization</a> [[RFC6973]], design your APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.
             </p>
-            <p>
+            <p class="practicedesc">
               Authors might design an API to allow for querying of a particular value, rather than returning an enumeration of all values. User agents and researchers can then more easily distinguish between sites that query for one or two particular values (gaining minimal entropy) and those that query for all values (more likely attempting to fingerprint the browser); or implementations can cap the number of different values. For example, Tor Browser limits the number of fonts that can be queried with a <code>browser.display.max_font_attempts</code> preference.
             </p>
-            <p class="issue">TODO: Other examples? Reference DAP Minimization guidelines.</p>
+            <p class="practicedesc">
+              For more information, see:
+            </p>
+            <ul class="practicedesc">
+              <li><a href="http://www.w3.org/2001/tag/doc/APIMinimization">Data Minimization in Web APIs</a>, Draft TAG Finding, September 2011</li>
+              <li><a href="http://www.w3.org/TR/dap-privacy-reqs/">Device API Privacy Requirements</a>, <abbr title="Device APIs Working Group">DAP</abbr> Working Group Note, June 2010</li>
+            </ul>
+            <p class="issue">TODO: Other examples?</p>
           </div>     
           
           <div class="practice">
@@ -393,7 +406,7 @@
     <section class="appendix">
       <h2>Acknowledgements</h2>
       <p>
-        Many thanks to Robin Berjon for ReSpec and to Tobie Langel for Github advice; to the <a href="http://www.w3.org/Privacy/">Privacy Interest Group</a> for review; and to Christine Runnegar for contributions.
+        Many thanks to Robin Berjon for ReSpec and to Tobie Langel for Github advice; to the Privacy Interest Group and the Technical Architecture Group for review; to the Tor Browser designers for references and recommendations; and to Christine Runnegar for contributions.
       </p>
     </section>
   </body>
