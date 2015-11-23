@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fingerprinting Guidance for Web Specification Authors</title>
+    <title>Fingerprinting Guidance for Web Specification Authors (Draft)</title>
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
     <script class='remove'>
       var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-          specStatus:           "unofficial",
-          
+          specStatus:           "IG-NOTE",
+          publishDate: "2015-11-24",
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "fingerprinting-guidance",
 
@@ -38,21 +38,28 @@
           // only "name" is required
           editors:  [
               { name: "Nick Doty", url: "https://npdoty.name/",
-                company: "W3C", companyURL: "http://w3.org/" },
+                company: "W3C", companyURL: "http://www.w3.org/" },
           ],
           otherLinks: [{
               key: "Version history",
               data: [{
                 value: "GitHub commit history",
                 href: "https://github.com/w3c/fingerprinting-guidance/commits/gh-pages"
-           }]}],          
+           }]},
+           {
+                         key: "Issues list",
+                         data: [{
+                           value: "GitHub issues list",
+                           href: "https://github.com/w3c/fingerprinting-guidance/issues"
+                      }]
+           }
+           ],          
 
-          
           // name of the WG
           wg:           "Privacy Interest Group",
           
           // URI of the public WG page
-          wgURI:        "http://w3.org/Privacy/",
+          wgURI:        "http://www.w3.org/Privacy/",
           
           // name (without the @w3c.org) of the public mailing to which comments are due
           wgPublicList: "public-privacy",
@@ -63,6 +70,7 @@
           // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
           // Team Contact.
           wgPatentURI:  "",
+          charterDisclosureURI: "http://www.w3.org/2011/07/privacy-ig-charter.html",
           
           localBiblio: {
             "EVERCOOKIE": {
@@ -150,7 +158,7 @@
       Exposure of settings and characteristics of browsers can impact user privacy by allowing for browser fingerprinting. This document defines different types of fingerprinting, considers distinct levels of mitigation for the related privacy risks and provides guidance for Web specification authors on how to balance these concerns when designing new Web features.
     </section>
     <section id="sotd">
-      This is a draft of a document intended to be published as a Note by the <a href="http://w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>). PING will collaborate with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. Constructive feedback of all kinds is welcomed; feel free to contact the editor directly or send comments to the <a href="mailto:public-privacy@w3.org">public-privacy</a> mailing list (<a href="https://lists.w3.org/Archives/Public/public-privacy/">public archives</a>).
+      This is a draft of a document for providing guidance to Web specification authors on mitigating the privacy impacts of fingerprintability published by the <a href="http://www.w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>) on 24 November 2015. PING will collaborate with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. PING has chosen to publish this draft to gather wider feedback and will continue to revise this document based on open issues and further feedback. Constructive input of all kinds would be useful; feel free to contact the editor directly, send comments to the <a href="mailto:public-privacy@w3.org">mailing list</a> or <a href="https://github.com/w3c/fingerprinting-guidance/issues">file issues on GitHub</a>.
     </section>
     <section>
       <h2>Browser fingerprinting</h2>
@@ -275,7 +283,7 @@
               <span id="mark-fingerprinting" class="practicelab">Mark features that contribute to fingerprintability.</span>
             </p>
             <p class="practicedesc">
-              <img src="http://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint">
+              <img src="http://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint" alt="This feature may contribute to browser fingerprintability.">
               Where a feature does contribute to the fingerprinting surface, indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is.            
             </p>
             <p class="note">
@@ -333,7 +341,7 @@
               <span id="anticipate-disabled" class="practicelab">Enable graceful degradation for privacy-conscious users or implementers.</span>
             </p>
             <p class="practicedesc">
-              If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users. Following the principle of <a>progressive enhancement</a>, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
+              If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users. Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
             </p>
             <p class="practicedesc">
               Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a href="http://www.w3.org/TR/html5/scripting-1.html#security-with-canvas-elements">origin-clean flag</a> allows control over whether an image canvas can be read (a significant fingerprinting surface).
@@ -384,12 +392,12 @@
         <p><em>What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?</em></p>
         <ul>
           <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010.</li>
-          <li>Yen, Ting-Fang, et al. "<a href="http://www.rsasecurity.ch/rsalabs/staff/bios/tfyen/publications/NDSS12-HostTracking.pdf">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
+          <li>Yen, Ting-Fang, et al. "<a href="http://www.internetsociety.org/host-fingerprinting-and-tracking-web-privacy-and-security-implications">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
           <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <em>Proceedings of W2SP</em> (2012).</li>
           <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="http://w2spconf.com/2011/papers/jspriv.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In Web 2.0 Security and Privacy, 2011.</li>
-          <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://online.wsj.com/article/SB10001424052702304458604577488822667325882.html">On Orbitz, Mac Users Steered to Pricier Hotels</a>". Wall Street Journal, August 23, 2012.</li>
+          <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://www.wsj.com/articles/SB10001424052702304458604577488822667325882">On Orbitz, Mac Users Steered to Pricier Hotels</a>". Wall Street Journal, August 23, 2012.</li>
           <li id="FPDetective">Gunes Acar et al. "<a href="http://dl.acm.org/citation.cfm?id=2516674">FPDetective: dusting the web for fingerprinters</a>." In CCS '13 Proceedings of the 2013 ACM SIGSAC conference on Computer &amp; communications security.</li>
-          <li>Nikiforakis, Nick, et al. "<a href="http://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." IEEE Symposium on Security and Privacy. 2013.</li>
+          <li>Nikiforakis, Nick, et al. "<a href="https://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." IEEE Symposium on Security and Privacy. 2013.</li>
         </ul>
         
         <h3>Testing</h3>
