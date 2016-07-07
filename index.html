@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fingerprinting Guidance for Web Specification Authors (Draft)</title>
+    <title>Mitigating Fingerprinting in Web Specifications</title>
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
     <script class='remove'>
       var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-          specStatus:           "IG-NOTE",
-          publishDate: "2015-11-24",
+          //specStatus:           "IG-NOTE",
+          specStatus: "ED",
+          //publishDate: "2016-07-06",
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "fingerprinting-guidance",
 
@@ -25,11 +26,11 @@
 
           // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
           // and its maturity status
-          // previousPublishDate:  "1977-03-15",
-          // previousMaturity:  "WD",
+          previousPublishDate:  "2015-11-25",
+          previousMaturity:  "IG-NOTE",
 
           // if there a publicly available Editor's Draft, this is the link
-          //edDraftURI:           "http://dev.w3.org/2009/dap/ReSpec.js/documentation.html",
+          edDraftURI:           "http://w3c.github.io/fingerprinting-guidance/",
 
           // if this is a LCWD, uncomment and set the end of its review period
           // lcEnd: "2009-08-05",
@@ -37,8 +38,7 @@
           // editors, add as many as you like
           // only "name" is required
           editors:  [
-              { name: "Nick Doty", url: "https://npdoty.name/",
-                company: "W3C", companyURL: "http://www.w3.org/" },
+              { name: "Nick Doty", url: "https://npdoty.name/" },
           ],
           otherLinks: [{
               key: "Version history",
@@ -155,10 +155,10 @@
   </head>
   <body>
     <section id="abstract">
-      Exposure of settings and characteristics of browsers can impact user privacy by allowing for browser fingerprinting. This document defines different types of fingerprinting, considers distinct levels of mitigation for the related privacy risks and provides guidance for Web specification authors on how to balance these concerns when designing new Web features.
+      Exposure of settings and characteristics of browsers can harm user privacy by allowing for browser fingerprinting. This document defines different types of fingerprinting, considers distinct levels of mitigation for the related privacy risks and provides guidance for Web specification authors on how to balance these concerns when designing new Web features.
     </section>
     <section id="sotd">
-      This is a draft of a document for providing guidance to Web specification authors on mitigating the privacy impacts of fingerprintability published by the <a href="http://www.w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>) on 24 November 2015. PING will collaborate with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. PING has chosen to publish this draft to gather wider feedback and will continue to revise this document based on open issues and further feedback. Constructive input of all kinds would be useful; feel free to contact the editor directly, send comments to the <a href="mailto:public-privacy@w3.org">mailing list</a> or <a href="https://github.com/w3c/fingerprinting-guidance/issues">file issues on GitHub</a>.
+      This document is a draft Interest Group Note to provide guidance to Web specification authors on mitigating the privacy impacts of browser fingerprinting, currently under development by the <a href="http://www.w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>). <a href="https://www.w3.org/TR/2015/NOTE-fingerprinting-guidance-20151124/">A snapshot draft of this Note was published on 24 November 2015</a>. PING is collaborating with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. Constructive input of all kinds would be useful; feel free to contact the editor directly, send comments to the <a href="mailto:public-privacy@w3.org">mailing list</a> or <a href="https://github.com/w3c/fingerprinting-guidance/issues">file issues on GitHub</a>.
     </section>
     <section>
       <h2>Browser fingerprinting</h2>
@@ -181,7 +181,7 @@
 
         <section>
           <h3>Identify a user</h3>
-          <p>There are many reasons why users might wish to remain anonymous or unidentified online, including: concerns about surveillance, personal physical safety, concerns about discrimination against them based on what they read or write when using the Web. When a browser fingerprint is correlated with identifying information (like a real name), an application or service provider may be able to identify an otherwise pseudonymous user.</p>
+          <p>There are many reasons why users might wish to remain anonymous or unidentified online, including: concerns about surveillance, personal physical safety, concerns about discrimination against them based on what they read or write when using the Web. When a browser fingerprint is correlated with identifying information (like an email address or legal name), an application or service provider may be able to identify an otherwise pseudonymous user.</p>
           <p>Users concerned about physical safety from, for example, a governmental adversary might employ onion routing systems such as Tor to limit network-level linkability but still face the danger of browser fingerprinting to correlate their Web-based activity.</p>
           <p class="note">Is this privacy implication usefully distinct from unexpected correlation? How does this relate to linkability to other identities? [via TAG feedback]</p>
         </section>
@@ -195,7 +195,7 @@
         <section>
           <h3>Tracking without transparency or user control</h3>
           <p>
-            In contrast to other mechanisms defined by Web standards for maintaining state (e.g. cookies), browser fingerprinting allows for collection of data about user activity without clear indications that such collection is happening. Transparency can be important for end users, to understand how ongoing collection is happening, but it also enables researchers, policymakers and others to document or regulate privacy-sensitive activity. Browser fingerprinting also allows for tracking of activity without clear or effective user controls: a browser fingerprint cannot be cleared or re-set. (See the TAG finding on unsanctioned tracking [[TAG-UNSANCTIONED]].)
+            In contrast to other mechanisms defined by Web standards for maintaining state (e.g. cookies), browser fingerprinting allows for collection of data about user activity without clear indications that such collection is happening. Transparency can be important for end users, to understand how ongoing collection is happening, but it also enables researchers, policymakers and others to document or regulate privacy-sensitive activity. Browser fingerprinting also allows for tracking of activity without clear or effective user controls: a browser fingerprint typically cannot be cleared or re-set. (See the finding on unsanctioned tracking [[TAG-UNSANCTIONED]].)
           </p>
         </section>
     </section>
@@ -217,8 +217,8 @@
         <h2 id="types_of_fingerprinting">Types of fingerprinting</h2>
         <section>
           <h3 id="passive">Passive</h3>
-          <p><dfn>Passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executing on the client side.</p>
-          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests) and the set of HTTP request headers and the IP address and other network-level information. The <a href="http://tools.ietf.org/html/rfc2616#section-14.43">User-Agent string</a>, for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the user agent string and IP address will commonly uniquely identify a particular user's browser [[NDSS-FINGERPRINTING]].</p>
+          <p><dfn>Passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executed on the client.</p>
+          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests), the set of HTTP request headers and the IP address and other network-level information. The <a href="http://tools.ietf.org/html/rfc2616#section-14.43">User-Agent string</a>, for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the User-Agent string and IP address will commonly uniquely identify a particular user's browser [[NDSS-FINGERPRINTING]].</p>
         </section>
         <section>
           <h3 id="active">Active</h3>
@@ -240,7 +240,7 @@
           <dl>
           <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
           <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
-          <dt>Detectable fingerprinting</dt><dd>Making (in particular, client-side) fingerprinting observable to the user agent or some other party, so that the user agent might block it or a crawler can determine that it's happening.</dd>
+          <dt>Detectable fingerprinting</dt><dd>Making (in particular, client-side) fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
           </dl>
       </section>
       <section>
@@ -248,7 +248,7 @@
         <p>
           This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like fingerprinting can be documented to enable clearing local state.</p>
         <p>
-          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means, as suggested by the TAG [[TAG-UNSANCTIONED]].
+          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means  [[TAG-UNSANCTIONED]].
         </p>
       </section>
     </section>
