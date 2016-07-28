@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Mitigating Fingerprinting in Web Specifications</title>
+    <title>Mitigating Browser Fingerprinting in Web Specifications</title>
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
     <script class='remove'>
@@ -9,6 +9,7 @@
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
           //specStatus:           "IG-NOTE",
           specStatus: "ED",
+          noRecTrack: true,
           //publishDate: "2016-07-06",
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "fingerprinting-guidance",
@@ -165,7 +166,7 @@
         <section>
         <h2>What is fingerprinting?</h2>
         <p>In short, <dfn>browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
-        <p>A more detailed list of types of fingerprinting is included below. A similar definition is provided by [[RFC6973]].</p>
+        <p>A similar definition is provided by [[RFC6973]]. A more detailed list of types of fingerprinting is included below. This document does not attempt to catalog all features currently used or usable for browser fingerprinting; however, <a href="#research"></a> provides links to browser vendor pages and academic findings.</p>
         </section>
         <section>
         <h2 id="privacy_threat_models">Privacy impacts and threat models</h2>
@@ -188,7 +189,7 @@
         
         <section>
           <h3>Correlation of browsing activity</h3>
-          <p>Browser fingerprinting provides privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
+          <p>Browser fingerprinting raises privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
           <p>Browser fingerprinting also allows for tracking across <a class="externalDFN" href="http://tools.ietf.org/html/rfc6454#section-4">origins</a> [[RFC6454]]: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
         </section>
         
@@ -205,7 +206,7 @@
         Advances in techniques for browser fingerprinting (see <a href="#research"></a>, below), particularly in <a>active fingerprinting</a>, suggest that elimination of the capability of browser fingerprinting by a determined adversary through solely technical means that are widely deployed is implausible. However, mitigations in our technical specifications are possible, as described below (<a href="#mitigations"></a>), and may achieve different levels of success (<a href="#feasibility"></a>).
       </p>
       <p>
-        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack. In order to mitigate the risk as a whole, fingerprinting must be considered during the design and development of all specifications.</p>
+        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack; for example, differences in TCP connections. In order to mitigate the risk as a whole, fingerprinting must be considered during the design and development of all specifications.</p>
       <p>The TAG finding on Unsanctioned Web Tracking, including browser fingerprinting, includes description of the limitations of technical measures and encourages minimizing and documenting new fingerprinting surface [[TAG-UNSANCTIONED]]. The best practices below detail common actions that authors of specifications for Web features can take to mitigate the privacy impacts of browser fingerprinting.
       </p>
     </section>
@@ -306,11 +307,13 @@
         <p class="practicedesc">
           To reduce unnecessary entropy, specify aspects of API return values and behavior that don't contribute to functional differences. For example, if the ordering of return values in a list has no semantic value, specify a particular ordering (alphabetical order by a defined algorithm, for example) so that incidental differences don't expose fingerprinting surface.
         </p>
+        <p class="practicedesc">
+          Access to a list of system fonts via Flash or Java plugins notably returns the list sorted not in a standard alphabetical order, but in an unspecified order specific to the system. This ordering adds to the entropy available from that plugin in a way that provides no functional advantage. (See <a href="https://trac.webkit.org/wiki/Fingerprinting#ii.CollectingSystemFontsviaFlashPlugins">Collecting System Fonts via Flash Plugins</a>.)
+        </p>
       </div>
-      <p class="issue">
-        TODO: why we don't typically recommend that we try to do this across user agent implementations
-				... that is, why we're not advocating for getting rid of the User Agent string
-			</p>
+      <p>
+        Standardization does <em>not</em> need to attempt to hide all differences between different browsers (e.g. Edge and Chrome); implemented functionality and behavior differences will always exist between different implementations. For that reason, removing <code>User-Agent</code> headers altogether is not a goal. However, variation in the <code>User-Agent</code> string that reveals additional information about the user or device has been shown to provide substantial fingerprinting surface (see "Beauty and the Beast" in <a href="#research"></a>, below).
+      </p>
 		</section>
         <section>
           <h3>Detectability</h3>
@@ -327,24 +330,31 @@
               Authors might design an API to allow for querying of a particular value, rather than returning an enumeration of all values. User agents and researchers can then more easily distinguish between sites that query for one or two particular values (gaining minimal entropy) and those that query for all values (more likely attempting to fingerprint the browser); or implementations can cap the number of different values. For example, Tor Browser limits the number of fonts that can be queried with a <code>browser.display.max_font_attempts</code> preference.
             </p>
             <p class="practicedesc">
+              The granularity or precision of information returned can be minimized in order to reduce entropy. For example, implementations of the Battery Status API [[BATTERY-STATUS]] allowed for high precision (double-precision, or 15-17 significant digits) readings of the current battery level, which provided a short-term identifier that could be used to correlate traffic across origins or clearance of local state. Rounding off values to lower precision mitigates browser fingerprinting while maintaining functional use cases. Alternatively, providing Boolean or a small enumeration of values might provide functionality without revealing underlying details; for example, the Boolean <code>near</code> property in the Proximity Sensor API [[PROXIMITY]].
+            </p>
+            <p class="practicedesc">
               For more information, see:
             </p>
             <ul class="practicedesc">
               <li><a href="http://www.w3.org/2001/tag/doc/APIMinimization">Data Minimization in Web APIs</a>, Draft TAG Finding, September 2011</li>
               <li><a href="http://www.w3.org/TR/dap-privacy-reqs/">Device API Privacy Requirements</a>, <abbr title="Device APIs Working Group">DAP</abbr> Working Group Note, June 2010</li>
+              <li><a href="https://w3c.github.io/sensors/#security-and-privacy">Generic Sensor API: Security and privacy considerations</a>, Editor's Draft, May 2016.</li>
+              <li><a href="http://eprint.iacr.org/2015/616.pdf">The leaking battery: A privacy analysis of the HTML5 Battery Status API</a>, February 2016.</li>
             </ul>
-            <p class="issue">TODO: Other examples?</p>
           </div>     
           
+          <p>
+            If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users.
+          </p>
           <div class="practice">
             <p>
               <span id="anticipate-disabled" class="practicelab">Enable graceful degradation for privacy-conscious users or implementers.</span>
             </p>
             <p class="practicedesc">
-              If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users. Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
+              Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
             </p>
             <p class="practicedesc">
-              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a href="http://www.w3.org/TR/html5/scripting-1.html#security-with-canvas-elements">origin-clean flag</a> allows control over whether an image canvas can be read (a significant fingerprinting surface).
+              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a href="http://www.w3.org/TR/html5/scripting-1.html#security-with-canvas-elements">origin-clean flag</a> allows control over whether an image canvas can be read, a significant fingerprinting surface.
             </p>
           </div>     
         </section>
@@ -353,10 +363,13 @@
           <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of cookie-like fingerprinting. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource).</p>
           <div class="practice">
             <p>
-              <span id="no-new-cookies" class="practicelab">Avoid unnecessary new cookie-like local state mechanisms.</span>
+              <span id="no-new-cookies" class="practicelab">Avoid unnecessary new local state mechanisms.</span>
             </p>
             <p class="practicedesc">
               If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), avoid creating a new cookie-like feature. Can the functionality be accomplished with existing HTTP cookies or an existing JavaScript local storage API?
+            </p>
+            <p class="practicedesc">
+              For example, the Flash plugin's Local Shared Objects (LSOs) have often been used to duplicate and re-spawn HTTP cookies cleared by the user. (See "<a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1446862">Flash Cookies and Privacy</a>", Soltani et al., August 2009.)
             </p>
           </div>
           <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior; in particular, you can help implementers prevent "permanent", "zombie", "super" or "evercookies".</p>
@@ -365,13 +378,13 @@
               <span id="mark-cookie-like" class="practicelab">Highlight any local state mechanisms to enable simultaneous clearing.</span>
             </p>
             <p class="practicedesc">
-              Clearly note where state is being maintained and could be queried and provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier. As a result, your design should not rely on saving and later querying data on the client beyond a user's clearing all local state. That is, you should not expect any local state information to be permanent.
+              Clearly note where state is being maintained and could be queried and provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier. As a result, your design should not rely on saving and later querying data on the client beyond a user's clearing all local state. That is, you should not expect any local state information to be permanent or to persist longer than other local state.
             </p>
           </div>
           <p>Though not strictly browser fingerprinting, there are other privacy concerns regarding user tracking for features that provide local storage of data. Mitigations suggested in the Web Storage API specification include: white-listing, black-listing, expiration and secure deletion [[WEBSTORAGE-user-tracking]].</p>
         </section>
-        <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track: a cooperative approach</h3>
-          <p>Expressions of, and compliance with, a Do Not Track signal does not inhibit the capability of browser fingerprinting, but may mitigate some user concerns about fingerprinting, specifically around tracking as defined in those specifications [[TRACKING-DNT]] [[TRACKING-COMPLIANCE]] and as implemented by services that comply with those user preferences.</p>
+        <section><h3 id="do_not_track_a_cooperative_approach">Do Not Track</h3>
+          <p>Expressions of, and compliance with, a Do Not Track signal does not inhibit the capability of browser fingerprinting, but may mitigate some user concerns about fingerprinting, specifically around tracking as defined in those specifications [[TRACKING-DNT]] [[TRACKING-COMPLIANCE]] and as implemented by services that comply with those user preferences. That is, DNT can mitigate concerns with cooperative sites.</p>
           <p>The use of <abbr title="Do Not Track">DNT</abbr> in this way typically does not require changes to other functional specifications. 
             If your specification expects a particular behavior upon receiving a particular DNT signal, indicate that with a reference to [[TRACKING-DNT]].
             If your specification introduces a new communication channel that could be used for tracking, you might wish to define how a DNT signal should be communicated.
