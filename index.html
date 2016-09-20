@@ -226,7 +226,7 @@
           <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, or rendering graphical patterns. Key to this distinction is that <a>active fingerprinting</a> takes place in a way that is potentially detectable on the client.</p>
         </section>
         <section>
-          <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like (setting/retrieving local state)</h3>
+          <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like</h3>
           <p>Users, user agents and devices may also be re-identified by a site that first sets and later retrieves state stored by a user agent or device. This <dfn>cookie-like fingerprinting</dfn> allows re-identification of a user or inferences about a user in the same way that HTTP cookies allow state management for the stateless HTTP protocol [[RFC6265]].</p>
           <p>Cookie-like fingerprinting can also circumvent user attempts to limit or clear cookies stored by the user agent, as demonstrated by the "evercookie" implementation [[EVERCOOKIE]]. Where state is maintained across user agents (as in the case of common plugins with local storage), across devices (as in the case of certain browser syncing mechanisms) or across software upgrades, cookie-like fingerprinting can allow re-identification of users, user agents or devices where active and passive fingerprinting might not.</p>
         </section>
@@ -241,17 +241,24 @@
           <dl>
           <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
           <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
-          <dt>Detectable fingerprinting</dt><dd>Making (in particular, client-side) fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
+          <dt>Detectable fingerprinting</dt><dd>Making (in particular, active) fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
           </dl>
+          <dt>Clearable local state</dt><dd>Helping users respond to fingerprinting by making state mechanisms clearable.</dd>
       </section>
       <section>
         <h2>Feasible goals for specification authors</h2>
         <p>
-          This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like fingerprinting can be documented to enable clearing local state.</p>
+          This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like mechanisms can be made clearable.</p>
         <p>
           Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means  [[TAG-UNSANCTIONED]].
         </p>
       </section>
+    </section>
+    <section>
+      <h2 id="identifying">Identifying fingerprinting surface</h2>
+      
+      <p class="issue">TODO: It may make the mitigation best practices below more actionable if we also provide advice on how to identify potential fingerprinting surface, and then direct towards the appropriate mitigation. See, for example, <a href="https://github.com/w3c/fingerprinting-guidance/issues/13">Issue 13: actionability through a decision tree or other</a>. In particular: note different kinds of data sources.</p>
+      
     </section>
     <section>
         <h2 id="mitigations">Mitigations</h2>
@@ -342,7 +349,9 @@
               <li><a href="http://eprint.iacr.org/2015/616.pdf">The leaking battery: A privacy analysis of the HTML5 Battery Status API</a>, February 2016.</li>
             </ul>
           </div>     
-          
+          <p>
+            Implementers can facilitate detectability by providing or enabling instrumentation so that users or third parties are able to calculate when fingerprinting surface is being accessed. Of particular importance for instrumentation are: access to all the different sources of fingerprinting surface; identification of the originating script; avoiding exposure that instrumentation is taking place. Beyond the minimization practice described above, these are largely implementation-specific (rather than Web specification) features.
+          </p>
           <p>
             If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users.
           </p>
@@ -378,7 +387,17 @@
               <span id="mark-cookie-like" class="practicelab">Highlight any local state mechanisms to enable simultaneous clearing.</span>
             </p>
             <p class="practicedesc">
-              Clearly note where state is being maintained and could be queried and provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier. As a result, your design should not rely on saving and later querying data on the client beyond a user's clearing all local state. That is, you should not expect any local state information to be permanent or to persist longer than other local state.
+              Clearly note where state is being maintained and could be queried and provide guidance to implementers on enabling simultaneous deletion of local state for users. Such functionality can mitigate the threat of "evercookies"  because the presence of state in one such storage mechanism can't be used to persist and re-create an identifier.
+            </p>
+          </div>
+          <p>Permanent or persistent data (including any identifiers) are of particular risk because they undermine the ability for a user to clear or re-set the state of their device or to maintain different identities.</p>
+          <div class="practice">
+            <p>
+              <span id="no-permanent" class="practicelab">Limit permanent or persistent state.</span>
+            </p>
+            <p class="practicedesc">
+              Permanent identifiers or other state (for example, identifiers or keys set in hardware) should typically not be exposed. Where necessary, access to such identifiers would require user permission (however, explaining the implications of such permission to users may be difficult) and limitation to a particular origin (however, server-side collusion between origins will be difficult to detect).
+              As a result, your design should not rely on saving and later querying data on the client beyond a user's clearing cookies or other local state. That is, you should not expect any local state information to be permanent or to persist longer than other local state.
             </p>
           </div>
           <p>Though not strictly browser fingerprinting, there are other privacy concerns regarding user tracking for features that provide local storage of data. Mitigations suggested in the Web Storage API specification include: white-listing, black-listing, expiration and secure deletion [[WEBSTORAGE-user-tracking]].</p>
