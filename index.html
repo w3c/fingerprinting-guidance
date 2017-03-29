@@ -250,41 +250,56 @@
         <p>
           This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like mechanisms can be made clearable.</p>
         <p>
-          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means  [[TAG-UNSANCTIONED]].
+          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means [[TAG-UNSANCTIONED]].
         </p>
       </section>
     </section>
     <section>
-      <h2 id="identifying">Identifying fingerprinting surface</h2>
+      <h2 id="identifying">Identifying fingerprinting surface and evaluating severity</h2>
       
-      <p class="issue">TODO: It may make the mitigation best practices below more actionable if we also provide advice on how to identify potential fingerprinting surface, and then direct towards the appropriate mitigation. See, for example, <a href="https://github.com/w3c/fingerprinting-guidance/issues/13">Issue 13: actionability through a decision tree or other</a>. In particular: note different kinds of data sources.</p>
+      <p class="issue">Re: <a href="https://github.com/w3c/fingerprinting-guidance/issues/13">Issue 13: actionability through a decision tree or other</a>, this section is intended to provide advice on identifying fingerprinting surface and evaluating severity based on several factors.</p>
       
+      <p>To mitigate browser fingerprinting in your specification, first identify what features could be used for browser fingerprinting. The <dfn>fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity.</p>
+
+      <p>Data sources that may be used for browser fingerprinting include:</p>
+      <ul>
+        <li>user configuration</li>
+        <li>device characteristics</li>
+        <li>environmental characteristics <em>(e.g. sensor readings)</em></li>
+        <li>operating system characteristics</li>
+        <li>user behavior</li>
+        <li>browser characteristics</li>
+      </ul>
+      <p>The <a href="https://www.torproject.org/projects/torbrowser/design/#fingerprinting-linkability">Tor Browser design document</a> has more details on these sources and their relative priorities; this document adds environmental characteristics in that sensor readings or data access may distinguish a user, user agent or device by information about the environment (location, for example).</p>
+
+      <p id="severity-list">Second, for each identified feature, consider the severity for the privacy impacts described above (<a href="#privacy_threat_models"></a>) based on the following factors:</p>
+
+      <dl>
+        <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person.</dd>
+        <dt>detectability</dt><dd>Will use of this feature for browser fingerprinting be observable to the user agent or likely to be discoverable by researchers? Because detectability is an important &mdash; and perhaps the most feasible &mdash; mitigation, increases to the surface for <a>passive fingerprinting</a> are of particular concern and should be avoided.</dd>
+        <dt>persistence</dt><dd>How long will the characteristics of this fingerprinting surface stay unchanged? Can users control or re-set these values to prevent long-lived identification? While short-lived characteristics may still enable unexpected correlation of activity (for example, between two browser profiles on the same device), persistent or permanent identifiers are particularly concerning for the lack of user control.</dd>
+        <dt>availability</dt><dd>Will this surface be accessible to the "drive-by Web" or only in certain contexts where a user has granted a particular sensor permission or directly authenticated? While browser fingerprinting is still something to mitigate in the permissioned context, the concern that a feature will end up used primarily for fingerprinting is reduced.</dd>
+        <dt>scope</dt><dd>Is this surface consistent across origins or only within a single origin? In general, characteristics or identifiers that are tied to a particular origin are of less concern and can be handled with the same tools as HTTP cookies.</dd>
+      </dl>
+
+      <p>While we do not recommend specific trade-offs, these factors can be used to weigh increases to that surface (<a href="#weighing_increased_fingerprinting_surface"></a>) and suggest appropriate mitigations. Although each factor may suggest specific mitigations, in weighing whether to add <a>fingerprinting surface</a> they should be considered in concert. For example, access to a new set of characteristics about the user may be high entropy, but be of less concern because it has limited availability and is easily detectable. A cross-origin, drive-by-accessible, permanent, passive unique identifier is incompatible with our expectations for privacy on the Web.</p>
+
     </section>
     <section>
         <h2 id="mitigations">Mitigations</h2>
         <section>
           <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
-          <p>The <dfn>fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity. Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of plugins, fonts, connected devices may provide a large fingerprinting surface with minimal functional support.</p>
+          <p>Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of plugins, fonts, connected devices may provide a large fingerprinting surface with minimal functional support.</p>
           <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its likely implementations and the entropy of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, these practices provide some guidance:</p>
           
           <div class="practice">
             <p>
-              <span id="avoid-passive-increases" class="practicelab">Avoid unnecessary increases to the surface for passive fingerprinting.</span>
+              <span id="avoid-passive-increases" class="practicelab">Avoid unnecessary or severe increases to fingerprinting surface.</span>
             </p>
             <p class="practicedesc">
-              Unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be avoided. Passive fingerprinting surface allows for much easier fingerprinting, without opportunities for external detection (by users or third parties).
+              Consider each of the <a href="#severity-list">severity factors</a> described above and whether comparable functionality is feasible without adding to the fingerprinting surface. In particular, unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be avoided. Passive fingerprinting allows for easier identification, without opportunities for external detection or control by users or third parties.
             </p>
           </div>
-          <div class="practice">
-            <p>
-              <span id="avoid-active-increases" class="practicelab">Prefer functionally-comparable designs that don't increase the surface for active fingerprinting.</span>
-            </p>
-            <p class="practicedesc">
-              If comparable functionality could be accomplished without increasing the surface for active fingerprinting, prefer the less fingerprintable alternative. Defining "equivalent" or "comparable" functionality can be difficult; use your best judgment and avoid unnecessary fingerprintability.       
-            </p>
-          </div>
-          
-          <p>The difference between these practices recognizes that passive fingerprinting surface has lesser options for mitigation (lacking external detectability and client-side preventability) and greater feasibility for reduction.</p>
           
           <div class="practice">
             <p>
@@ -292,10 +307,7 @@
             </p>
             <p class="practicedesc">
               <img src="http://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint" alt="This feature may contribute to browser fingerprintability.">
-              Where a feature does contribute to the fingerprinting surface, indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is.            
-            </p>
-            <p class="note">
-            This practice (and this image) is drawn from the HTML5 specification, which uses it throughout. Can we get feedback from the HTML WG or from readers of that specification as to whether the practice has been useful?
+              Where a feature does contribute to the <a>fingerprinting surface</a>, indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is.            
             </p>
           </div>
         </section>
@@ -305,7 +317,7 @@
         Specifications can mitigate against fingerprintability through standardization; by defining a consistent behavior, conformant implementations won't have variations that can be used for browser fingerprinting.
 			</p>
       <p>
-        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. While this strategy may be pursued by some implementations, we expect in general it will be more effective for us to standardize or null values rather than setting a range over which they can vary. The <a href="https://www.torproject.org/projects/torbrowser/design/#idp55149888">Tor Browser design</a> provides more detailed information, but in short: it's difficult to measure how well randomization will work as a mitigation and it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities).
+        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. While this strategy may be pursued by some implementations, we expect in general it will be more effective for us to standardize or null values rather than setting a range over which they can vary. The <a href="https://www.torproject.org/projects/torbrowser/design/#idm608">Tor Browser design</a> provides more detailed information, but in short: it's difficult to measure how well randomization will work as a mitigation and it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities).
       </p>
       <div class="practice">
         <p>
