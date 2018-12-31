@@ -168,8 +168,8 @@
         <p>In short, <dfn id="dfn-browser-fingerprinting" data-export="">browser fingerprinting</dfn> is the capability of a site to identify or re-identify a visiting user, user agent or device via configuration settings or other observable characteristics.</p>
         <p>A similar definition is provided by [[RFC6973]]. A more detailed list of types of fingerprinting is included below. This document does not attempt to catalog all features currently used or usable for browser fingerprinting; however, <a href="#research"></a> provides links to browser vendor pages and academic findings.</p>
         </section>
-        <section>
-        <h2 id="privacy_threat_models">Privacy impacts and threat models</h2>
+        <section id="privacy_threat_models">
+        <h2>Privacy impacts and threat models</h2>
 
         <p>Browser fingerprinting can be used as a security measure (e.g. as means of authenticating the user). However, fingerprinting is also a potential threat to users' privacy on the Web. This document does not attempt to provide a single unifying definition of "privacy" or "personal data", but we highlight how browser fingerprinting might impact users' privacy. For example, browser fingerprinting can be used to:</p>
         <ul>
@@ -182,14 +182,13 @@
 
         <section>
           <h3>Identify a user</h3>
-          <p>There are many reasons why users might wish to remain anonymous or unidentified online, including: concerns about surveillance, personal physical safety, concerns about discrimination against them based on what they read or write when using the Web. When a browser fingerprint is correlated with identifying information (like an email address or legal name), an application or service provider may be able to identify an otherwise pseudonymous user.</p>
-          <p>Users concerned about physical safety from, for example, a governmental adversary might employ onion routing systems such as Tor to limit network-level linkability but still face the danger of browser fingerprinting to correlate their Web-based activity.</p>
+          <p>There are many reasons why users might wish to remain anonymous or unidentified online, including: concerns about surveillance, personal physical safety, and concerns about discrimination against them based on what they read or write when using the Web. When a browser fingerprint is correlated with identifying information (like an email address, a recognized given and sur-name, or a government-issued identifier), an application or service provider may be able to identify an otherwise pseudonymous user. The adversary and consequences of this threat will vary by the particular user and use case, but can include nation-state intelligence agencies and threats of violence or imprisonment.</p>
           <p class="note">Is this privacy implication usefully distinct from unexpected correlation? How does this relate to linkability to other identities? [via TAG feedback]</p>
         </section>
         
         <section>
           <h3>Correlation of browsing activity</h3>
-          <p>Browser fingerprinting raises privacy concerns even when real-world identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
+          <p>Browser fingerprinting raises privacy concerns even when offline identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
           <p>Browser fingerprinting also allows for tracking across <a class="externalDFN" href="http://tools.ietf.org/html/rfc6454#section-4">origins</a> [[RFC6454]]: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
         </section>
         
@@ -203,10 +202,10 @@
     <section>
       <h2>What can we do about it?</h2>
       <p>
-        Advances in techniques for browser fingerprinting (see <a href="#research"></a>, below), particularly in <a>active fingerprinting</a>, suggest that elimination of the capability of browser fingerprinting by a determined adversary through solely technical means that are widely deployed is implausible. However, mitigations in our technical specifications are possible, as described below (<a href="#mitigations"></a>), and may achieve different levels of success (<a href="#feasibility"></a>).
+        Advances in techniques for browser fingerprinting (see <a href="#research"></a>, below), particularly in <a>active fingerprinting</a>, suggest that complete elimination of the capability of browser fingerprinting by a determined adversary through solely technical means that are widely deployed is implausible. However, mitigations in our technical specifications are possible, as described below (<a href="#mitigations"></a>), and may achieve different levels of success (<a href="#feasibility"></a>).
       </p>
       <p>
-        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack; for example, differences in TCP connections. In order to mitigate the risk as a whole, fingerprinting must be considered during the design and development of all specifications.</p>
+        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack; for example, differences in TCP connections. For example, a user might employ an onion routing system such as Tor to limit network-level linkability, but still face the risk of correlating Web-based activity through browser fingerprinting, or vice versa. In order to mitigate these privacy risks as a whole, fingerprinting must be considered during the design and development of all specifications.</p>
       <p>The TAG finding on Unsanctioned Web Tracking, including browser fingerprinting, includes description of the limitations of technical measures and encourages minimizing and documenting new fingerprinting surface [[TAG-UNSANCTIONED]]. The best practices below detail common actions that authors of specifications for Web features can take to mitigate the privacy impacts of browser fingerprinting.
       </p>
     </section>
@@ -232,8 +231,8 @@
         </section>
     </section>
 
-    <section>
-      <h2 id="feasibility">Feasibility</h2>
+    <section id="feasibility">
+      <h2>Feasibility</h2>
       
       <section>
           <h2>Fingerprinting mitigation levels of success</h2>
@@ -270,12 +269,15 @@
         <li>user behavior</li>
         <li>browser characteristics</li>
       </ul>
+
+      <p>These data sources may be accessed directly for some features, but in many other cases they are inferred through some other observation. Timing channels, in particular, are commonly used to infer details of hardware (exactly how quickly different operations are completed may provide information on GPU capability, say), network information (via the latency or speed in loading a particular resource) or even user configuration (what items have been previously cached or what resources are not loaded). Consider the side effects of feature and how those side effects would allow inferences of any of these characteristics.</p>
+
       <p>The <a href="https://www.torproject.org/projects/torbrowser/design/#fingerprinting-linkability">Tor Browser design document</a> has more details on these sources and their relative priorities; this document adds environmental characteristics in that sensor readings or data access may distinguish a user, user agent or device by information about the environment (location, for example).</p>
 
       <p id="severity-list">Second, for each identified feature, consider the severity for the privacy impacts described above (<a href="#privacy_threat_models"></a>) based on the following factors:</p>
 
       <dl>
-        <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person.</dd>
+        <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person. Different data sources may provide different distributions of variation; for example, some characteristics may reveal a common hardware class while other characteristics may reveal user configurations that vary between individual people.</dd>
         <dt>detectability</dt><dd>Will use of this feature for browser fingerprinting be observable to the user agent or likely to be discoverable by researchers? Because detectability is an important &mdash; and perhaps the most feasible &mdash; mitigation, increases to the surface for <a>passive fingerprinting</a> are of particular concern and should be avoided.</dd>
         <dt>persistence</dt><dd>How long will the characteristics of this fingerprinting surface stay unchanged? Can users control or re-set these values to prevent long-lived identification? While short-lived characteristics may still enable unexpected correlation of activity (for example, between two browser profiles on the same device), persistent or permanent identifiers are particularly concerning for the lack of user control.</dd>
         <dt>availability</dt><dd>Will this surface be accessible to the "drive-by Web" or only in certain contexts where a user has granted a particular sensor permission or directly authenticated? While browser fingerprinting is still something to mitigate in the permissioned context, the concern that a feature will end up used primarily for fingerprinting is reduced.</dd>
@@ -287,10 +289,10 @@
       <p>In conducting this analysis, it may be tempting to dismiss certain fingerprinting surface in a specification because of a comparison to fingerprinting surface exposed by other parts of the Web platform or other layers of the stack. Be cautious about making such claims. First, while similar information may be available through other means, similar is not identical: information disclosures may not be exactly the same and fingerprintability is promoted by combining these distinct sources. Second, where identical entropy is present, other factors of severity or accessibility may differ and those factors are important for feasible mitigation. Third, the platform is neither monolithic nor static; not all other features are implemented in all cases and may change (or be removed) in the future. Fourth, circular dependencies are a danger when so many new features are under development; two specifications sometimes refer to one another in arguing that fingerprinting surface already exists. It is more useful to reviewers and implementers to consider the fingerprinting surface provided by the particular Web feature itself, with specific references where surface may be accessible through other features as well.</p>
 
     </section>
-    <section>
-        <h2 id="mitigations">Mitigations</h2>
-        <section>
-          <h3 id="weighing_increased_fingerprinting_surface">Weighing increased fingerprinting surface</h3>
+    <section id="mitigations">
+        <h2>Mitigations</h2>
+        <section id="weighing_increased_fingerprinting_surface">
+          <h3>Weighing increased fingerprinting surface</h3>
           <p>Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of plugins, fonts, connected devices may provide a large fingerprinting surface with minimal functional support.</p>
           <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its likely implementations and the entropy of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, these practices provide some guidance:</p>
           
@@ -299,9 +301,11 @@
               <span id="avoid-passive-increases" class="practicelab">Avoid unnecessary or severe increases to fingerprinting surface.</span>
             </p>
             <p class="practicedesc">
-              Consider each of the <a href="#severity-list">severity factors</a> described above and whether comparable functionality is feasible without adding to the fingerprinting surface. In particular, unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be avoided. Passive fingerprinting allows for easier identification, without opportunities for external detection or control by users or third parties.
+              Consider each of the <a href="#severity-list">severity factors</a> described above and whether comparable functionality is feasible without adding to the fingerprinting surface. In particular, unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be avoided. Passive fingerprinting allows for easier and widely-available identification, without opportunities for external detection or control by users or third parties.
             </p>
           </div>
+
+          <p>Some implementations may also limit the entropy of fingerprinting surface by not exposing different capabilities for different devices or installations of a user agent. Font lists, for example, can be limited to a whitelist commonly available on all devices that run a particular browser or operating system (as implemented in Tor Browser, Firefox and Safari).</p>
           
           <div class="practice">
             <p>
@@ -326,7 +330,7 @@
         Specifications can mitigate against fingerprintability through standardization; by defining a consistent behavior, conformant implementations won't have variations that can be used for browser fingerprinting.
 			</p>
       <p>
-        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. While this strategy may be pursued by some implementations, we expect in general it will be more effective for us to standardize or null values rather than setting a range over which they can vary. The <a href="https://www.torproject.org/projects/torbrowser/design/#idm608">Tor Browser design</a> provides more detailed information, but in short: it's difficult to measure how well randomization will work as a mitigation and it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities).
+        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. While this strategy may be pursued by some implementations, we expect in general it will be more effective for us to standardize or null values rather than setting a range over which they can vary. The <a href="https://www.torproject.org/projects/torbrowser/design/#idm608">Tor Browser design</a> provides more detailed information, but in short: it's difficult to measure how well randomization will work as a mitigation and it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities). Standardization provides the benefit of an increased anonymity set for conformant browsers with the same configuration: that is, an individual can look the same as a larger group of people rather than trying to look like a number of different individuals.
       </p>
       <div class="practice">
         <p>
@@ -432,8 +436,8 @@
         </section>
     </section>
     
-    <section class="appendix">
-        <h2 id="research">Research</h2>
+    <section class="appendix" id="research">
+        <h2>Research</h2>
         <p><em>Some browser developers maintain pages on browser fingerprinting, including: potential mitigations or modifications necessary to decrease the surface of that browser engine; different vectors that can be used for fingerprinting; potential future work. These are not cheery, optimistic documents.</em></p>
         <ul>
           <li>"<a href="https://sites.google.com/a/chromium.org/dev/Home/chromium-security/client-identification-mechanisms#TOC-Fingerprinting-prevention-and-detection-challenges">Technical analysis of client identification mechanisms</a>". The Chromium Projects.</li>
