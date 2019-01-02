@@ -139,6 +139,24 @@
               "date": "17 July 2015",
               "authors": ["Mark Nottingham"],
               "publisher": "W3C Technical Architecture Group"
+            },
+            "HIDING-CROWD": {
+              "href": "https://hal.inria.fr/hal-01718234v2",
+              "title": "Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale",
+              "date": "April 2018",
+              "authors": ["Alejandro Gómez-Boix", "Pierre Laperdrix", "Benoit Baudry"],
+              "publisher": "WWW2018 - TheWebConf2018: 27th International World Wide Web Conference"
+            },
+            "WPM-MILLION": {
+              "href": "https://webtransparency.cs.princeton.edu/webcensus/",
+              "authors": ["Steven Englehardt", "Arvind Narayanan"],
+              "date": "May 2016",
+              "title": "Online tracking: A 1-million-site measurement and analysis"
+            },
+            "FLASHCOOKIES-2": {
+              "href": "https://ptolemy.berkeley.edu/projects/truststc/education/reu/11/Posters/AyensonMWambachDpaper.pdf",
+              "authors": ["Mika Ayenson", "Dietrich Wambach", "Ashkan Soltani", "Nathan Good", "Chris Hoofnagle"],
+              "title": "Flash cookies and privacy II: Now with HTML5 and ETag respawning"
             }
           }
       };
@@ -236,13 +254,14 @@
       
       <section>
           <h2>Fingerprinting mitigation levels of success</h2>
-          <p>There are different levels of success in addressing browser fingerprinting:</p>
+          <p>There are different levels of success in mitigating browser fingerprinting:</p>
           <dl>
           <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
           <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
           <dt>Detectable fingerprinting</dt><dd>Making (in particular, active) fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
-          </dl>
           <dt>Clearable local state</dt><dd>Helping users respond to fingerprinting by making state mechanisms clearable.</dd>
+          </dl>
+          <p>Research has shown feasible improvement in privacy protection in all of these areas. While lists of plugins remain a large fingerprinting surface, entropy has decreased over time with migration to Web APIs over plugins [[HIDING-CROWD]]. Collected data on Web users has shown mobile devices to have substantially larger anonymity sets than desktop browsers [[HIDING-CROWD]]. Research on forms of active fingerprinting has documented its use and demonstrated changes in use of those techniques as an apparent result of increased awareness [[WPM-MILLION]]. Respawning of cookies has continued, with an increasing variety of techniques, but awareness and technical responses to the issue has made the practice less widespread [[FLASHCOOKIES-2]].</p>
       </section>
       <section>
         <h2>Feasible goals for specification authors</h2>
@@ -450,14 +469,17 @@
         <ul>
           <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010.</li>
           <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="http://w2spconf.com/2011/papers/jspriv.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In <i>Web 2.0 Security and Privacy</i>, 2011.</li>
-          <li>Yen, Ting-Fang, et al. "<a href="http://www.internetsociety.org/host-fingerprinting-and-tracking-web-privacy-and-security-implications">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012.</li>
+          <li>Yen, Ting-Fang, et al. "<a href="http://www.internetsociety.org/host-fingerprinting-and-tracking-web-privacy-and-security-implications">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012. [[NDSS-FINGERPRINTING]]</li>
           <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <i>Web 2.0 Security and Privacy</i>, 2012.</li>
           <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://www.wsj.com/articles/SB10001424052702304458604577488822667325882">On Orbitz, Mac Users Steered to Pricier Hotels</a>". <i>Wall Street Journal</i>, August 23, 2012.</li>
           <li id="FPDetective">Gunes Acar et al. "<a href="http://dl.acm.org/citation.cfm?id=2516674">FPDetective: dusting the web for fingerprinters</a>." In <i>CCS '13</i>.</li>
           <li>Nikiforakis, Nick, et al. "<a href="https://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2013)</i>, 2013.</li>
           <li>G. Acar, C. Eubank, S. Englehardt, M. Juarez, A. Narayanan, C. Diaz. "<a href="https://securehomes.esat.kuleuven.be/%7Egacar/persistent/">The Web never forgets: Persistent tracking mechanisms in the wild</a>." In <i>Proceedings of CCS 2014</i>, Nov. 2014.</li>
-          <li>Steven Englehardt, Arvind Narayanan. "<a href="https://webtransparency.cs.princeton.edu/webcensus/">Online tracking: A 1-million-site measurement and analysis</a>." May 2016.</li>
+          <li>Steven Englehardt, Arvind Narayanan. "<a href="https://webtransparency.cs.princeton.edu/webcensus/">Online tracking: A 1-million-site measurement and analysis</a>." May 2016. [[WPM-MILLION]]</li>
           <li>Pierre Laperdrix, Walter Rudametkin, Benoit Baudry. "<a href="https://hal.inria.fr/hal-01285470v2/">Beauty and the Beast: Diverting modern web browsers to build unique browser fingerprints</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2016)</i>, May 2016.</li>
+          <li>
+            "<a href="https://hal.inria.fr/hal-01718234v2">Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale</a>." <i>WWW2018 - TheWebConf 2018: 27th International World Wide Web Conference</i>, April 2018. [[HIDING-CROWD]]
+          </li>
         </ul>
         
         <h3>Testing</h3>
