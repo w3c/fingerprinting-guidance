@@ -113,26 +113,6 @@
               "status": "Rec",
               "publisher": "W3C"
             },
-            "TRACKING-DNT": {
-              "href": "http://www.w3.org/TR/tracking-dnt/",
-              "title": "Tracking Preference Expression (DNT)",
-              "date": "April 2014",
-              "authors": [
-                "Roy Fielding", "David Singer"
-              ],
-              "status": "LCWD",
-              "publisher": "W3C"
-            },
-            "TRACKING-COMPLIANCE": {
-              "href": "http://www.w3.org/TR/tracking-compliance/",
-              "title": "Tracking Compliance and Scope",
-              "date": "July 2015",
-              "authors": [
-                "Nick Doty", "Justin Brookman", "Heather West", "Sean Harvey", "Erica Newland"
-              ],
-              "status": "LCWD",
-              "publisher": "W3C"
-            },
             "TAG-UNSANCTIONED": {
               "href": "https://w3ctag.github.io/unsanctioned-tracking/",
               "title": "Unsanctioned Web Tracking",
@@ -153,10 +133,41 @@
               "date": "May 2016",
               "title": "Online tracking: A 1-million-site measurement and analysis"
             },
+            "FLASHCOOKIES": {
+              "href": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1446862",
+              "date": "10 August 2009",
+              "authors": ["Ashkan Soltani","Shannon Canty","Quentin Mayo","Lauren Thomas","Chris Jay Hoofnagle"],
+              "title": "Flash Cookies and Privacy"
+            },
             "FLASHCOOKIES-2": {
               "href": "https://ptolemy.berkeley.edu/projects/truststc/education/reu/11/Posters/AyensonMWambachDpaper.pdf",
               "authors": ["Mika Ayenson", "Dietrich Wambach", "Ashkan Soltani", "Nathan Good", "Chris Hoofnagle"],
               "title": "Flash cookies and privacy II: Now with HTML5 and ETag respawning"
+            },
+            "TOR-DESIGN": {
+              "title": "The Design and Implementation of the Tor Browser",
+              "href": "https://www.torproject.org/projects/torbrowser/design/",
+              "date": "15 June 2018",
+              "authors": ["Mike Perry", "Erinn Clark", "Steven Murdoch", "Georg Koppen"]
+            },
+            "TAG-MINIMIZATION": {
+              "href": "https://www.w3.org/2001/tag/doc/APIMinimization",
+              "date": "12 September 2011",
+              "authors": ["Daniel Appelquist"],
+              "publisher": "W3C Technical Architecture Group"
+            },
+            "LEAKING-BATTERY": {
+              "href": "https://eprint.iacr.org/2015/616.pdf",
+              "date": "2015",
+              "authors": ["Łukasz Olejnik", "Gunes Acar", "Claude Castelluccia", "Claudia Diaz"],
+              "title": "The leaking battery: A privacy analysis of the HTML5 Battery Status API"
+            },
+            "BEAUTY-BEAST": {
+              "authors": ["Pierre Laperdrix", "Walter Rudametkin", "Benoit Baudry"],
+              "title": "Beauty and the Beast: Diverting modern web browsers to build unique browser fingerprints",
+              "publisher": "IEEE Symposium on Security and Privacy (S&P 2016)", 
+              "date": "May 2016",
+              "href": "https://hal.inria.fr/hal-01285470v2/"
             }
           }
       };
@@ -236,7 +247,7 @@
         <section>
           <h3 id="passive">Passive</h3>
           <p><dfn>Passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executed on the client.</p>
-          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests), the set of HTTP request headers and the IP address and other network-level information. The <a href="http://tools.ietf.org/html/rfc2616#section-14.43">User-Agent string</a>, for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the User-Agent string and IP address will commonly uniquely identify a particular user's browser [[NDSS-FINGERPRINTING]].</p>
+          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests), the set of HTTP request headers and the IP address and other network-level information. The <a data-cite="RFC7231#section-5.5.3">User-Agent string</a> [[RFC7231]], for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the User-Agent and IP address will often uniquely identify a particular user's browser [[NDSS-FINGERPRINTING]].</p>
         </section>
         <section>
           <h3 id="active">Active</h3>
@@ -258,7 +269,7 @@
           <dl>
           <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or accessible attributes that can be used for fingerprinting.</dd>
           <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
-          <dt>Detectable fingerprinting</dt><dd>Making (in particular, active) fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
+          <dt>Detectable fingerprinting</dt><dd>Making fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
           <dt>Clearable local state</dt><dd>Helping users respond to fingerprinting by making state mechanisms clearable.</dd>
           </dl>
           <p>Research has shown feasible improvement in privacy protection in all of these areas. While lists of plugins remain a large fingerprinting surface, entropy has decreased over time with migration to Web APIs over plugins [[HIDING-CROWD]]. Collected data on Web users has shown mobile devices to have substantially larger anonymity sets than desktop browsers [[HIDING-CROWD]]. Research on forms of active fingerprinting has documented its use and demonstrated changes in use of those techniques as an apparent result of increased awareness [[WPM-MILLION]]. Respawning of cookies has continued, with an increasing variety of techniques, but awareness and technical responses to the issue has made the practice less widespread [[FLASHCOOKIES-2]].</p>
@@ -291,7 +302,7 @@
 
       <p>These data sources may be accessed directly for some features, but in many other cases they are inferred through some other observation. Timing channels, in particular, are commonly used to infer details of hardware (exactly how quickly different operations are completed may provide information on GPU capability, say), network information (via the latency or speed in loading a particular resource) or even user configuration (what items have been previously cached or what resources are not loaded). Consider the side effects of feature and how those side effects would allow inferences of any of these characteristics.</p>
 
-      <p>The <a href="https://www.torproject.org/projects/torbrowser/design/#fingerprinting-linkability">Tor Browser design document</a> has more details on these sources and their relative priorities; this document adds environmental characteristics in that sensor readings or data access may distinguish a user, user agent or device by information about the environment (location, for example).</p>
+      <p>The <a href="https://www.torproject.org/projects/torbrowser/design/#fingerprinting-linkability">Tor Browser design document</a> [[TOR-DESIGN]] has more details on these sources and their relative priorities; this document adds environmental characteristics in that sensor readings or data access may distinguish a user, user agent or device by information about the environment (location, for example).</p>
 
       <p id="severity-list">Second, for each identified feature, consider the severity for the privacy impacts described above (<a href="#privacy_threat_models"></a>) based on the following factors:</p>
 
@@ -349,7 +360,7 @@
         Specifications can mitigate against fingerprintability through standardization; by defining a consistent behavior, conformant implementations won't have variations that can be used for browser fingerprinting.
 			</p>
       <p>
-        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. While this strategy may be pursued by some implementations, we expect in general it will be more effective for us to standardize or null values rather than setting a range over which they can vary. The <a href="https://www.torproject.org/projects/torbrowser/design/#idm608">Tor Browser design</a> provides more detailed information, but in short: it's difficult to measure how well randomization will work as a mitigation and it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities). Standardization provides the benefit of an increased anonymity set for conformant browsers with the same configuration: that is, an individual can look the same as a larger group of people rather than trying to look like a number of different individuals.
+        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. While this strategy may be pursued by some implementations, we expect in general it will be more effective for us to standardize or null values rather than setting a range over which they can vary. The Tor Browser design [[TOR-DESIGN]] provides more detailed information, but in short: it's difficult to measure how well randomization will work as a mitigation and it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities). Standardization provides the benefit of an increased anonymity set for conformant browsers with the same configuration: that is, an individual can look the same as a larger group of people rather than trying to look like a number of different individuals.
       </p>
       <div class="practice">
         <p>
@@ -363,7 +374,7 @@
         </p>
       </div>
       <p>
-        Standardization does <em>not</em> need to attempt to hide all differences between different browsers (e.g. Edge and Chrome); implemented functionality and behavior differences will always exist between different implementations. For that reason, removing <code>User-Agent</code> headers altogether is not a goal. However, variation in the <code>User-Agent</code> string that reveals additional information about the user or device has been shown to provide substantial fingerprinting surface (see "Beauty and the Beast" in <a href="#research"></a>, below).
+        Standardization does <em>not</em> need to attempt to hide all differences between different browsers (e.g. Edge and Chrome); implemented functionality and behavior differences will always exist between different implementations. For that reason, removing <code>User-Agent</code> headers altogether is not a goal. However, variation in the <code>User-Agent</code> string that reveals additional information about the user or device has been shown to provide substantial fingerprinting surface [[BEAUTY-BEAST]].
       </p>
 		</section>
         <section>
@@ -375,7 +386,7 @@
               <span id="api-minimization" class="practicelab">Design APIs to access only the entropy necessary.</span>
             </p>
             <p class="practicedesc">
-              Following the basic principle of <a class="externalDFN" href="https://tools.ietf.org/html/rfc6973#section-6.1">data minimization</a> [[RFC6973]], design your APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.
+              Following the basic principle of <a data-cite="rfc6973#section-6.1">data minimization</a> [[RFC6973]], design your APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.
             </p>
             <p class="practicedesc">
               Authors might design an API to allow for querying of a particular value, rather than returning an enumeration of all values. User agents and researchers can then more easily distinguish between sites that query for one or two particular values (gaining minimal entropy) and those that query for all values (more likely attempting to fingerprint the browser); or implementations can cap the number of different values. For example, Tor Browser limits the number of fonts that can be queried with a <code>browser.display.max_font_attempts</code> preference.
@@ -387,17 +398,17 @@
               For more information, see:
             </p>
             <ul class="practicedesc">
-              <li><a href="http://www.w3.org/2001/tag/doc/APIMinimization">Data Minimization in Web APIs</a>, Draft TAG Finding, September 2011</li>
-              <li><a href="http://www.w3.org/TR/dap-privacy-reqs/">Device API Privacy Requirements</a>, <abbr title="Device APIs Working Group">DAP</abbr> Working Group Note, June 2010</li>
-              <li><a href="https://w3c.github.io/sensors/#security-and-privacy">Generic Sensor API: Security and privacy considerations</a>, Editor's Draft, May 2016.</li>
-              <li><a href="http://eprint.iacr.org/2015/616.pdf">The leaking battery: A privacy analysis of the HTML5 Battery Status API</a>, February 2016.</li>
+              <li><a href="http://www.w3.org/TR/dap-privacy-reqs/">Device API Privacy Requirements</a> [[dap-privacy-reqs]], <abbr title="Device APIs Working Group">DAP</abbr> Working Group Note, June 2010.</li>
+              <li><a href="http://www.w3.org/2001/tag/doc/APIMinimization">Data Minimization in Web APIs</a> [[TAG-MINIMIZATION]], W3C <abbr title="Technical Architecture Group">TAG</abbr>, September 2011.</li>
+              <li><a href="https://www.w3.org/TR/generic-sensor/#security-and-privacy">Generic Sensor API: Security and privacy considerations</a> [[generic-sensor]], March 2018.</li>
+              <li><a href="http://eprint.iacr.org/2015/616.pdf">The leaking battery: A privacy analysis of the HTML5 Battery Status API</a> [[LEAKING-BATTERY]], 2015.</li>
             </ul>
-          </div>     
+          </div>
           <p>
             Implementers can facilitate detectability by providing or enabling instrumentation so that users or third parties are able to calculate when fingerprinting surface is being accessed. Of particular importance for instrumentation are: access to all the different sources of fingerprinting surface; identification of the originating script; avoiding exposure that instrumentation is taking place. Beyond the minimization practice described above, these are largely implementation-specific (rather than Web specification) features.
           </p>
           <p>
-            If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. the <a href="https://www.torproject.org/projects/torbrowser.html.en">Tor Browser</a>) are going to be compelled to disable those features for certain privacy-conscious users.
+            If your specification exposes some fingerprinting surface (whether it's active or passive), some implementers (e.g. Tor Browser) are going to be compelled to disable those features for certain privacy-conscious users.
           </p>
           <div class="practice">
             <p>
@@ -407,7 +418,7 @@
               Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
             </p>
             <p class="practicedesc">
-              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a href="http://www.w3.org/TR/html5/scripting-1.html#security-with-canvas-elements">origin-clean flag</a> allows control over whether an image canvas can be read, a significant fingerprinting surface.
+              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a data-cite="html5/semantics-scripting.html#canvas-origin-clean">origin-clean flag</a> [[html5]] allows control over whether an image canvas can be read, a significant fingerprinting surface.
             </p>
           </div>     
         </section>
@@ -422,7 +433,7 @@
               If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), avoid creating a new cookie-like feature. Can the functionality be accomplished with existing HTTP cookies or an existing JavaScript local storage API?
             </p>
             <p class="practicedesc">
-              For example, the Flash plugin's Local Shared Objects (LSOs) have often been used to duplicate and re-spawn HTTP cookies cleared by the user. (See "<a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1446862">Flash Cookies and Privacy</a>", Soltani et al., August 2009.)
+              For example, the Flash plugin's Local Shared Objects (LSOs) have often been used to duplicate and re-spawn HTTP cookies cleared by the user [[FLASHCOOKIES]].
             </p>
           </div>
           <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior; in particular, you can help implementers prevent "permanent", "zombie", "super" or "evercookies".</p>
@@ -457,20 +468,27 @@
     
     <section class="appendix" id="research">
         <h2>Research</h2>
-        <p><em>Some browser developers maintain pages on browser fingerprinting, including: potential mitigations or modifications necessary to decrease the surface of that browser engine; different vectors that can be used for fingerprinting; potential future work. These are not cheery, optimistic documents.</em></p>
+
+        <section>
+          <h3>Browser vendor documentation</h3>
+        
+        <p>Some browser developers maintain pages on browser fingerprinting, including: potential mitigations or modifications necessary to decrease the surface of that browser engine; different vectors that can be used for fingerprinting; potential future work. These are not cheery, optimistic documents.</p>
         <ul>
-          <li>"<a href="https://sites.google.com/a/chromium.org/dev/Home/chromium-security/client-identification-mechanisms#TOC-Fingerprinting-prevention-and-detection-challenges">Technical analysis of client identification mechanisms</a>". The Chromium Projects.</li>
+          <li>The Chromium Projects: <a href="https://sites.google.com/a/chromium.org/dev/Home/chromium-security/client-identification-mechanisms#TOC-Fingerprinting-prevention-and-detection-challenges">Technical analysis of client identification mechanisms</a></li>
           <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
           <li><a href="https://wiki.mozilla.org/Fingerprinting">Mozilla Wiki: Fingerprinting</a></li>
           <li><a href="https://www.torproject.org/projects/torbrowser/design/#fingerprinting-linkability">The Design and Implementation of the Tor Browser: Cross-Origin Fingerprinting Unlinkability</a></li>
         </ul>
-        
-        <p><em>What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?</em></p>
+      </section>
+
+      <section>
+        <h3>Academic research</h3>        
+        <p>What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?</p>
         <ul>
           <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010.</li>
           <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="http://w2spconf.com/2011/papers/jspriv.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In <i>Web 2.0 Security and Privacy</i>, 2011.</li>
           <li>Yen, Ting-Fang, et al. "<a href="http://www.internetsociety.org/host-fingerprinting-and-tracking-web-privacy-and-security-implications">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012. [[NDSS-FINGERPRINTING]]</li>
-          <li>Mowery, Keaton, and Hovav Shacham. "Pixel perfect: Fingerprinting canvas in HTML5." <i>Web 2.0 Security and Privacy</i>, 2012.</li>
+          <li>Mowery, Keaton, and Hovav Shacham. "<a href="https://hovav.net/ucsd/dist/canvas.pdf">Pixel perfect: Fingerprinting canvas in HTML5</a>." <i>Web 2.0 Security and Privacy</i>, 2012.</li>
           <li id="wsj-orbitz">Mattioli, Dana. "<a href="http://www.wsj.com/articles/SB10001424052702304458604577488822667325882">On Orbitz, Mac Users Steered to Pricier Hotels</a>". <i>Wall Street Journal</i>, August 23, 2012.</li>
           <li id="FPDetective">Gunes Acar et al. "<a href="http://dl.acm.org/citation.cfm?id=2516674">FPDetective: dusting the web for fingerprinters</a>." In <i>CCS '13</i>.</li>
           <li>Nikiforakis, Nick, et al. "<a href="https://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2013)</i>, 2013.</li>
@@ -481,9 +499,10 @@
             "<a href="https://hal.inria.fr/hal-01718234v2">Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale</a>." <i>WWW2018 - TheWebConf 2018: 27th International World Wide Web Conference</i>, April 2018. [[HIDING-CROWD]]
           </li>
         </ul>
-        
+      </section>
+        <section>
         <h3>Testing</h3>
-        <p><em>A non-exhaustive list of sites that allow the visitor to test their configuration for fingerprintability.</em></p>
+        <p>A non-exhaustive list of sites that allow the visitor to test their configuration for fingerprintability.</p>
         <ul>
           <li><a href="https://amiunique.org/">amiunique.org</a> (INRIA)</li>
           <li><a href="https://panopticlick.eff.org/">panopticlick.eff.org</a> (EFF)</li>
@@ -491,6 +510,7 @@
           <li><a href="http://fingerprint.pet-portal.eu/">pet-portal cross-browser fingerprinting test</a></li>
           <li><a href="http://lcamtuf.coredump.cx/p0f3/">p0f v3</a> (purely passive fingerprinting)</li>
         </ul>
+        </section>
     </section>    
     
     <section class="appendix">
