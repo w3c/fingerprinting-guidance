@@ -168,6 +168,13 @@
               "publisher": "IEEE Symposium on Security and Privacy (S&P 2016)", 
               "date": "May 2016",
               "href": "https://hal.inria.fr/hal-01285470v2/"
+            },
+            "httpbis-client-hints": {
+              "href": "https://httpwg.org/http-extensions/client-hints.html",
+              "title": "HTTP Client Hints",
+              "authors": ["Ilya Grigorik"],
+              "date": "January 2019",
+              "publisher": "HTTP Working Group"
             }
           }
       };
@@ -212,7 +219,6 @@
         <section>
           <h3>Identify a user</h3>
           <p>There are many reasons why users might wish to remain anonymous or unidentified online, including: concerns about surveillance, personal physical safety, and concerns about discrimination against them based on what they read or write when using the Web. When a browser fingerprint is correlated with identifying information (like an email address, a recognized given and sur-name, or a government-issued identifier), an application or service provider may be able to identify an otherwise pseudonymous user. The adversary and consequences of this threat will vary by the particular user and use case, but can include nation-state intelligence agencies and threats of violence or imprisonment.</p>
-          <p class="note">Is this privacy implication usefully distinct from unexpected correlation? How does this relate to linkability to other identities? [via TAG feedback]</p>
         </section>
         
         <section>
@@ -284,11 +290,16 @@
       </section>
     </section>
     <section>
-      <h2 id="identifying">Identifying fingerprinting surface and evaluating severity</h2>
-      
-      <p class="issue">Re: <a href="https://github.com/w3c/fingerprinting-guidance/issues/13">Issue 13: actionability through a decision tree or other</a>, this section is intended to provide advice on identifying fingerprinting surface and evaluating severity based on several factors.</p>
+      <h2 id="identifying">Identifying fingerprinting surface and evaluating severity</h2>      
 
-      <p>To mitigate browser fingerprinting in your specification, first identify what features could be used for browser fingerprinting. The <dfn id="dfn-fingerprinting-surface" data-export="">fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity.</p>
+      <p>To mitigate browser fingerprinting in your specification:</p>
+      <ol>
+        <li>identify features that can be used for browser fingerprinting;</li>
+        <li>evaluate the severity of the fingerprinting surface based on <a href="#severity-list">these five factors</a>; and,</li>
+        <li>apply mitigations described in the best practices below (<a href="#mitigations"></a>), focused on limiting the severity of that fingerprinting surface.</li>
+      </ol>
+        
+      <p>The <dfn id="dfn-fingerprinting-surface" data-export="">fingerprinting surface</dfn> of a user agent is the set of observable characteristics that can be used in concert to identify a user, user agent or device or correlate its activity.</p>
 
       <p>Data sources that may be used for browser fingerprinting include:</p>
       <ul>
@@ -304,7 +315,7 @@
 
       <p>The <a href="https://www.torproject.org/projects/torbrowser/design/#fingerprinting-linkability">Tor Browser design document</a> [[TOR-DESIGN]] has more details on these sources and their relative priorities; this document adds environmental characteristics in that sensor readings or data access may distinguish a user, user agent or device by information about the environment (location, for example).</p>
 
-      <p id="severity-list">Second, for each identified feature, consider the severity for the privacy impacts described above (<a href="#privacy_threat_models"></a>) based on the following factors:</p>
+      <p id="severity-list">For each identified feature, consider the severity for the privacy impacts described above (<a href="#privacy_threat_models"></a>) based on the following factors:</p>
 
       <dl>
         <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person. Different data sources may provide different distributions of variation; for example, some characteristics may reveal a common hardware class while other characteristics may reveal user configurations that vary between individual people.</dd>
@@ -324,14 +335,29 @@
         <section id="weighing_increased_fingerprinting_surface">
           <h3>Weighing increased fingerprinting surface</h3>
           <p>Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of plugins, fonts, connected devices may provide a large fingerprinting surface with minimal functional support.</p>
-          <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its likely implementations and the entropy of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, these practices provide some guidance:</p>
+          <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its implementations and the severity of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, these practices provide some guidance:</p>
           
           <div class="practice">
             <p>
-              <span id="avoid-passive-increases" class="practicelab">Avoid unnecessary or severe increases to fingerprinting surface.</span>
+              <span id="avoid-passive-increases" class="practicelab">Avoid unnecessary or severe increases to fingerprinting surface, especially for passive fingerprinting.</span>
             </p>
             <p class="practicedesc">
-              Consider each of the <a href="#severity-list">severity factors</a> described above and whether comparable functionality is feasible without adding to the fingerprinting surface. In particular, unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be avoided. Passive fingerprinting allows for easier and widely-available identification, without opportunities for external detection or control by users or third parties.
+              Consider each of the <a href="#severity-list">severity factors</a> described above and whether that functionality is necessary and whether comparable functionality is feasible with less severe increases to the fingerprinting surface.
+            </p>
+            <p class="practicedesc">
+              In particular, unless a feature cannot reasonably be designed in any other way, increased passive fingerprintability should be avoided. Passive fingerprinting allows for easier and widely-available identification, without opportunities for external detection or control by users or third parties.
+            </p>
+          </div>
+
+          <div class="practice">
+            <p>
+              <span id="narrow-scope-availability" class="practicelab">Narrow the scope and availability of a feature with fingerprinting surface to what is functionally necessary.</span>
+            </p>
+            <p class="practicedesc">
+              What browsing contexts, resources and requests need access to a particular feature?  Identifiers can often be scoped to have a different value in different origins. Some configuration may only be necessary in top-level browsing contexts.
+            </p>
+            <p class="practicedesc">
+              Should access to this functionality be limited to where users have granted a particular permission? While excessive permissions can create confusion and fatigue, limiting highly granular data to situations where a user has already granted permission to access sensitive data widely mitigates the risk of that feature being used primarily for browser fingerprinting in "drive-by" contexts. For example, Media Capture and Streams [[mediacapture-streams]] limits access to attached microphone and camera device labels to when the user has granted permission to access a camera or microphone (while still allowing access to the number and configuration of attached cameras and microphones in all contexts, a noted increase in drive-by fingerprinting surface).
             </p>
           </div>
 
@@ -404,6 +430,24 @@
               <li><a href="http://eprint.iacr.org/2015/616.pdf">The leaking battery: A privacy analysis of the HTML5 Battery Status API</a> [[LEAKING-BATTERY]], 2015.</li>
             </ul>
           </div>
+          <p>
+            Related, detectability is improved even with data sent in HTTP headers (what we would typically consider passive fingerprinting) if sites are required to request access (or "opt in") to information before it's sent.
+          </p>
+          <div class="practice">
+              <p>
+                <span id="server-advertisement" class="practicelab">Require servers to advertise or opt in to access data.</span>
+              </p>
+              <p class="practicedesc">
+                Even for data sent in HTTP request headers, requiring servers to advertise use of particular data, publicly document a policy, or "opt in" before clients send configuration data provides the possibility of detection by user agents or researchers.
+              </p>
+              <p class="practicedesc">
+                For example, Client Hints [[httpbis-client-hints]] proposes an <code>Accept-CH</code> response header for services to indicate that specific hints can be used for content negotiation, rather than all supporting clients sending all hints in all requests.
+              </p>
+              <p class="note">
+                This is a relatively new approach; we're still evaluating whether this provides meaningful and useful detectability.
+              </p>
+          </div>
+
           <p>
             Implementers can facilitate detectability by providing or enabling instrumentation so that users or third parties are able to calculate when fingerprinting surface is being accessed. Of particular importance for instrumentation are: access to all the different sources of fingerprinting surface; identification of the originating script; avoiding exposure that instrumentation is taking place. Beyond the minimization practice described above, these are largely implementation-specific (rather than Web specification) features.
           </p>
