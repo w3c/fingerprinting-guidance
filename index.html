@@ -7,10 +7,10 @@
     <script class='remove'>
       var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-          //specStatus:           "IG-NOTE",
-          specStatus: "ED",
+          specStatus:           "IG-NOTE",
+          // specStatus: "ED",
           noRecTrack: true,
-          //publishDate: "2016-07-06",
+          publishDate: "2019-02-14",
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "fingerprinting-guidance",
 
@@ -203,7 +203,14 @@
       Exposure of settings and characteristics of browsers can harm user privacy by allowing for browser fingerprinting. This document defines different types of fingerprinting, considers distinct levels of mitigation for the related privacy risks and provides guidance for Web specification authors on how to balance these concerns when designing new Web features.
     </section>
     <section id="sotd">
-      This document is a draft Interest Group Note to provide guidance to Web specification authors on mitigating the privacy impacts of browser fingerprinting, currently under development by the <a href="http://www.w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>). <a href="https://www.w3.org/TR/2015/NOTE-fingerprinting-guidance-20151124/">A snapshot draft of this Note was published on 24 November 2015</a>. PING is collaborating with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. Constructive input of all kinds would be useful; feel free to contact the editor directly, send comments to the <a href="mailto:public-privacy@w3.org">mailing list</a> or <a href="https://github.com/w3c/fingerprinting-guidance/issues">file issues on GitHub</a>.
+     	    This document is an Interest Group Note providing best practices to Web specification
+	    authors on mitigating the privacy impacts of browser fingerprinting, developed
+	    by the <a href="http://www.w3.org/Privacy/">W3C Privacy Interest Group (PING)</a>. 
+	    PING has collaborated with the <a href="http://www.w3.org/2001/tag/">Technical Architecture Group</a> (TAG) on this guidance.
+	    Since the last publication: the list of best practices has been expanded and made
+	    more specific, guidance has been provided on how to evaluate the severity of fingerprinting
+	    surface, and additional references and examples have been provided. Constructive input of all
+	    kinds is welcome. Send comments to the <a href="mailto:public-privacy@w3.org">PING mailing list</a> or file issues in GitHub.
     </section>
     <section>
       <h2>Browser fingerprinting</h2>
