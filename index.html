@@ -267,7 +267,8 @@
         </section>
         <section>
           <h3 id="active">Active</h3>
-          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser. Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, or rendering graphical patterns. Key to this distinction is that <a>active fingerprinting</a> takes place in a way that is potentially detectable on the client.</p>
+          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser, user, device or other context.</p>
+          <p>Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, reading from device sensors, and rendering graphical patterns. Key to this distinction is that <a>active fingerprinting</a> takes place in a way that is potentially detectable on the client.</p>
         </section>
         <section>
           <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like</h3>
@@ -472,7 +473,7 @@
               Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
             </p>
             <p class="practicedesc">
-              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a data-cite="html5/semantics-scripting.html#canvas-origin-clean">origin-clean flag</a> [[?html5]] allows control over whether an image canvas can be read, a significant fingerprinting surface.
+              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a data-cite="html52/semantics-scripting.html#canvas-origin-clean">origin-clean flag</a> [[?html52]] allows control over whether an image canvas can be read, a significant fingerprinting surface.
             </p>
           </div>     
         </section>
