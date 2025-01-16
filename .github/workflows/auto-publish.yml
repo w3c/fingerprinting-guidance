@@ -16,4 +16,4 @@ jobs:
           W3C_WG_DECISION_URL: [replace with actual link to decision]
           W3C_BUILD_OVERRIDE: |
              shortName: fingerprinting-guidance
-             specStatus: IG-NOTE
+             specStatus: NOTE
