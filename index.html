@@ -84,6 +84,26 @@
               "publisher": "IEEE Symposium on Security and Privacy (S&P 2016)", 
               "date": "May 2016",
               "href": "https://inria.hal.science/hal-01285470v2/"
+            },
+            "HSTS-SUPERCOOKIE": {
+              "authors": ["Ben Friedland"],
+              "title": "HSTS Super Cookie",
+              "date": "Jan 2016",
+              "href": "https://github.com/ben174/hsts-cookie"
+            },
+            "httpbis-client-hints": {
+              "href": "https://httpwg.org/http-extensions/client-hints.html",
+              "title": "HTTP Client Hints",
+              "authors": ["Ilya Grigorik"],
+              "date": "January 2019",
+              "publisher": "HTTP Working Group"
+            },
+            "security-privacy-questionnaire-tag": {
+              "href": "https://w3ctag.github.io/security-questionnaire/",
+              "authors": ["Lukasz Olejnik", "Jason Novak"],
+              "date": "December 2018",
+              "title": "Self-Review Questionnaire: Security and Privacy",
+              "publisher": "W3C Technical Architecture Group"
             }
           }
       };
@@ -117,7 +137,7 @@
         <section id="privacy_threat_models">
         <h2>Privacy impacts and threat models</h2>
 
-        <p>Browser fingerprinting can be used as a security measure (e.g. as means of authenticating the user). However, fingerprinting is also a potential threat to users' privacy on the Web. This document does not attempt to provide a single unifying definition of "privacy" or "personal data", but we highlight how browser fingerprinting might impact users' privacy. For example, browser fingerprinting can be used to:</p>
+        <p>Browser fingerprinting can be used as a security measure (e.g. as means of authenticating the user). However, fingerprinting is also a threat to users' privacy on the Web. This document does not attempt to provide a single unifying definition of "privacy" or "personal data", but we highlight how browser fingerprinting might impact users' privacy. For example, browser fingerprinting can be used to:</p>
         <ul>
           <li>identify a user</li>
           <li>correlate a user’s browsing activity within and across sessions</li>
@@ -133,7 +153,7 @@
         
         <section>
           <h3>Correlation of browsing activity</h3>
-          <p>Browser fingerprinting raises privacy concerns even when offline identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
+          <p>Browser fingerprinting raises privacy concerns even when offline identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies or using a VPN do not prevent further correlation.</p>
           <p>Browser fingerprinting also allows for tracking across <a class="externalDFN" data-cite="rfc6454#section-4">origins</a> [[?RFC6454]]: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
         </section>
         
@@ -150,7 +170,7 @@
         Advances in techniques for browser fingerprinting (see <a href="#research"></a>, below), particularly in <a>active fingerprinting</a>, suggest that complete elimination of the capability of browser fingerprinting by a determined adversary through solely technical means that are widely deployed is implausible. However, mitigations in our technical specifications are possible, as described below (<a href="#mitigations"></a>), and may achieve different levels of success (<a href="#feasibility"></a>).
       </p>
       <p>
-        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack; for example, differences in TCP connections. For example, a user might employ an onion routing system such as Tor to limit network-level linkability, but still face the risk of correlating Web-based activity through browser fingerprinting, or vice versa. In order to mitigate these privacy risks as a whole, fingerprinting must be considered during the design and development of all specifications.
+        Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack; for example, differences in TCP connections. For example, a user might employ an onion routing system such as Tor to limit network-level linkability, but still face the risk of correlating Web-based activity through browser fingerprinting. In order to mitigate these privacy risks as a whole, fingerprinting must be considered during the design and development of all specifications.
       </p>
       <p>
         The TAG finding on Unsanctioned Web Tracking, including browser fingerprinting, includes description of the limitations of technical measures and encourages minimizing and documenting new fingerprinting surface [[?TAG-UNSANCTIONED]]. The best practices below detail common actions that authors of specifications for Web features can take to mitigate the privacy impacts of browser fingerprinting. The Self-Review Questionnaire documents mitigations of privacy impacts in Web features more generally that may complement these practices [[?security-privacy-questionnaire]].
@@ -169,8 +189,9 @@
         </section>
         <section>
           <h3 id="active">Active</h3>
-          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser, user, device or other context.</p>
-          <p>Techniques for active fingerprinting might include accessing the window size, enumerating fonts or plug-ins, evaluating performance characteristics, reading from device sensors, and rendering graphical patterns. Key to this distinction is that <a>active fingerprinting</a> takes place in a way that is potentially detectable on the client.</p>
+          <p>For <dfn>active fingerprinting</dfn>, we also consider techniques where a site runs JavaScript or other code on the local client to observe additional characteristics about the browser, user, device or other context. In recent years numerous techniques have ab(used) CSS features to perform fingerprinting on par with JavaScript.</p>
+          <p>Techniques for active fingerprinting might include accessing the window size, enumerating fonts or connected devices, evaluating performance characteristics, reading from device sensors, and rendering graphical patterns. Key to this distinction is that <a>active fingerprinting</a> takes place in a way that is potentially detectable on the client.</p>
+          <p>Note that in some types of active fingerprinting, characteristics are combined on the client to produce a fingerprint. In most cases; however, the characteristics are sent en masse to a server, which can combine them in unobservable ways.  The latter mechanism may be detectable, but the efficacy of fingerprinting mitigation techniques is much harder to measure in this scenario.
         </section>
         <section>
           <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like</h3>
@@ -186,19 +207,19 @@
           <h2>Fingerprinting mitigation levels of success</h2>
           <p>There are different levels of success in mitigating browser fingerprinting:</p>
           <dl>
-          <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or available attributes that can be used for fingerprinting.</dd>
+          <dt>Decreased fingerprinting surface</dt><dd>Removing the source of entropy or available attributes that can be used for fingerprinting, or limiting the data to not be accessible without some form of privilege being granted explicitly or implicitly.</dd>
           <dt>Increased anonymity set</dt><dd>By standardization, convention or common implementation, increasing the commonality of particular configurations to decrease the likelihood of unique fingerprintability.</dd>
           <dt>Detectable fingerprinting</dt><dd>Making fingerprinting observable to others, so that the user agent might block it or researchers can determine that it's happening.</dd>
           <dt>Clearable local state</dt><dd>Helping users respond to fingerprinting by making state mechanisms clearable.</dd>
           </dl>
-          <p>Research has shown feasible improvement in privacy protection in all of these areas. While lists of plugins remain a large fingerprinting surface, entropy has decreased over time with migration to Web APIs over plugins [[?HIDING-CROWD]]. Collected data on Web users has shown mobile devices to have substantially larger anonymity sets than desktop browsers [[?HIDING-CROWD]]. Research on forms of active fingerprinting has documented its use and demonstrated changes in use of those techniques as an apparent result of increased awareness [[?WPM-MILLION]]. Respawning of cookies has continued, with an increasing variety of techniques, but awareness and technical responses to the issue has made the practice less widespread [[?FLASHCOOKIES-2]].</p>
+          <p>Research has shown feasible improvement in privacy protection in all of these areas. Collected data on Web users has shown mobile devices to have substantially larger anonymity sets than desktop browsers [[?HIDING-CROWD]]. Research on forms of active fingerprinting has documented its use and demonstrated changes in use of those techniques as an apparent result of increased awareness [[?WPM-MILLION]]. Respawning of cookies has continued, with an increasing variety of techniques, but awareness and technical responses to the issue has made the practice less widespread [[?FLASHCOOKIES-2]].</p>
       </section>
       <section>
         <h2>Feasible goals for specification authors</h2>
         <p>
           This document works under the expectation that mitigations with different levels of success are feasible under different circumstances, for different threat models and against different types of fingerprinting. In general, active fingerprinting may be made detectable; we can minimize increases to the surface of passive fingerprinting; and cookie-like mechanisms can be made clearable.</p>
         <p>
-          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these at-risk users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means [[?TAG-UNSANCTIONED]].
+          Some implementers and some users may be willing to accept reduced functionality or decreased performance in order to minimize browser fingerprinting. Documenting which features have fingerprinting risk eases the work of implementers building modes for these users; minimizing fingerprinting even in cases where common implementations will have easy active fingerprintability allows such users to reduce the functionality trade-offs necessary. Making browser fingerprinting more detectable also contributes to mitigations outside the standardization process; for example, though regulatory or policy means [[?TAG-UNSANCTIONED]].
         </p>
       </section>
     </section>
@@ -216,7 +237,7 @@
 
       <p>Data sources that may be used for browser fingerprinting include:</p>
       <ul>
-        <li>user configuration</li>
+        <li>user configuration (of the browser or operating system)</li>
         <li>device characteristics</li>
         <li>environmental characteristics <em>(e.g. sensor readings)</em></li>
         <li>operating system characteristics</li>
@@ -231,23 +252,23 @@
       <p id="severity-list">For each identified feature, consider the severity for the privacy impacts described above (<a href="#privacy_threat_models"></a>) based on the following factors:</p>
 
       <dl>
-        <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person. Different data sources may provide different distributions of variation; for example, some characteristics may reveal a common hardware class while other characteristics may reveal user configurations that vary between individual people.</dd>
+        <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person. Different data sources may provide different distributions of variation; for example, even 1 bit of entropy can unique identify a user if they are the only one for whom it is true.</dd>
         <dt>detectability</dt><dd>Will use of this feature for browser fingerprinting be observable to the user agent or likely to be discoverable by researchers? Because detectability is an important &mdash; and perhaps the most feasible &mdash; mitigation, increases to the surface for <a>passive fingerprinting</a> are of particular concern and should be avoided.</dd>
         <dt>persistence</dt><dd>How long will the characteristics of this fingerprinting surface stay unchanged? Can users control or re-set these values to prevent long-lived identification? While short-lived characteristics may still enable unexpected correlation of activity (for example, between two browser profiles on the same device), persistent or permanent identifiers are particularly concerning for the lack of user control.</dd>
-        <dt>availability</dt><dd>Will this surface be available to the "drive-by Web" or only in certain contexts where a user has granted a particular sensor permission or directly authenticated? While browser fingerprinting is still something to mitigate in the permissioned context, the concern that a feature will end up used primarily for fingerprinting is reduced.</dd>
+        <dt>availability</dt><dd>Will this surface be available to the "drive-by Web" or only in certain contexts where a user has interacted with the document or granted a particular permission? While browser fingerprinting is still something to mitigate in the permissioned context, the concern that a feature will end up used primarily for fingerprinting is reduced.</dd>
         <dt>scope</dt><dd>Is this surface consistent across origins or only within a single origin? In general, characteristics or identifiers that are tied to a particular origin are of less concern and can be handled with the same tools as HTTP cookies.</dd>
       </dl>
 
       <p>While we do not recommend specific trade-offs, these factors can be used to weigh increases to that surface (<a href="#weighing_increased_fingerprinting_surface"></a>) and suggest appropriate mitigations. Although each factor may suggest specific mitigations, in weighing whether to add <a>fingerprinting surface</a> they should be considered in concert. For example, access to a new set of characteristics about the user may be high entropy, but be of less concern because it has limited availability and is easily detectable. A cross-origin, drive-by-available, permanent, passive unique identifier is incompatible with our expectations for privacy on the Web.</p>
 
-      <p>In conducting this analysis, it may be tempting to dismiss certain fingerprinting surface in a specification because of a comparison to fingerprinting surface exposed by other parts of the Web platform or other layers of the stack. Be cautious about making such claims. First, while similar information may be available through other means, similar is not identical: information disclosures may not be exactly the same and fingerprintability is promoted by combining these distinct sources. Second, where identical entropy is present, other factors of severity or availability may differ and those factors are important for feasible mitigation. Third, the platform is neither monolithic nor static; not all other features are implemented in all cases and may change (or be removed) in the future. Fourth, circular dependencies are a danger when so many new features are under development; two specifications sometimes refer to one another in arguing that fingerprinting surface already exists. It is more useful to reviewers and implementers to consider the fingerprinting surface provided by the particular Web feature itself, with specific references where surface may be available through other features as well.</p>
+      <p>In conducting this analysis, it may be tempting to dismiss certain fingerprinting surface in a specification because of a comparison to fingerprinting surface exposed by other parts of the Web platform or other layers of the stack. Be cautious about making such claims. First, while similar information may be available through other means, similar is not identical: information disclosures may not be exactly the same and fingerprintability is made even more effective by combining these distinct sources. Second, where identical entropy is present, other factors of severity or availability may differ and those factors are important for feasible mitigation. Third, the platform is neither monolithic nor static; not all other features are implemented in all cases and may change (or be removed) in the future. Fourth, circular dependencies are a danger when so many new features are under development; two specifications sometimes refer to one another in arguing that fingerprinting surface already exists. It is more useful to reviewers and implementers to consider the fingerprinting surface provided by the particular Web feature itself, with specific references where surface may be available through other features as well.</p>
 
     </section>
     <section id="mitigations">
         <h2>Mitigations</h2>
         <section id="weighing_increased_fingerprinting_surface">
           <h3>Weighing increased fingerprinting surface</h3>
-          <p>Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of plugins, fonts, connected devices may provide a large fingerprinting surface with minimal functional support.</p>
+          <p>Web specification authors regularly attempt to strike a balance between new functionality and fingerprinting surface. For example, feature detection functionality allows for progressive enhancement with a small addition to fingerprinting surface; detailed enumerations of fonts or connected devices may provide a large fingerprinting surface with minimal functional support.</p>
           <p>Authors and Working Groups determine the appropriate balance between these properties on a case-by-case basis, given their understanding of the functionality, its implementations and the severity of increased fingerprinting surface. However, given the distinct privacy impacts described above and in order to improve consistency across specifications, these practices provide some guidance:</p>
           
           <div class="practice">
@@ -309,7 +330,7 @@
           To reduce unnecessary entropy, specify aspects of API return values and behavior that don't contribute to functional differences. For example, if the ordering of return values in a list has no semantic value, specify a particular ordering (alphabetical order by a defined algorithm, for example) so that incidental differences don't expose fingerprinting surface.
         </p>
         <p class="practicedesc">
-          Access to a list of system fonts via Flash or Java plugins notably returns the list sorted not in a standard alphabetical order, but in an unspecified order specific to the system. This ordering adds to the entropy available from that plugin in a way that provides no functional advantage. (See <a href="https://trac.webkit.org/wiki/Fingerprinting#ii.CollectingSystemFontsviaFlashPlugins">Collecting System Fonts via Flash Plugins</a>.)
+          Even within a single implementation, variation can occur unexpectedly due to differences in processor architecture or operating system configuration. Access to a list of system fonts via Flash or Java plugins notably returned the list sorted not in a standard alphabetical order, but in an unspecified order specific to the system. This ordering added to the entropy available from that plugin in a way that provided no functional advantage.
         </p>
       </div>
       <p>
@@ -318,7 +339,7 @@
 		</section>
         <section>
           <h3>Detectability</h3>
-          <p>Where a client-side API provides some fingerprinting surface, authors can still mitigate the privacy concerns via detectability. If client-side fingerprinting activity is to some extent distinguishable from functional use of APIs, user agent implementations may have an opportunity to prevent ongoing fingerprinting or make it observable to users and external researchers (including academics or relevant regulators) who may be able to detect and investigate the use of fingerprinting.</p>
+          <p>Where a client-side API provides some fingerprinting surface, authors can still assist User Agents via detectability. If client-side fingerprinting activity is to some extent distinguishable from functional use of APIs, user agent implementations may have an opportunity to prevent ongoing fingerprinting or make it observable to users and external researchers (including academics or relevant regulators) who may be able to detect and investigate the use of fingerprinting.</p>
           
           <div class="practice">
             <p>
@@ -328,7 +349,7 @@
               Following the basic principle of <a data-cite="rfc6973#section-6.1">data minimization</a> [[?RFC6973]], design your APIs such that a site can access (and does access by default) only the entropy necessary for particular functionality.
             </p>
             <p class="practicedesc">
-              Authors might design an API to allow for querying of a particular value, rather than returning an enumeration of all values. User agents and researchers can then more easily distinguish between sites that query for one or two particular values (gaining minimal entropy) and those that query for all values (more likely attempting to fingerprint the browser); or implementations can cap the number of different values. For example, Tor Browser limits the number of fonts that can be queried with a <code>browser.display.max_font_attempts</code> preference.
+              Authors might design an API to allow for querying of a particular value, rather than returning an enumeration of all values. User agents and researchers can then more easily distinguish between sites that query for one or two particular values (gaining minimal entropy) and those that query for all values (more likely attempting to fingerprint the browser); or implementations can cap the number of different values.
             </p>
             <p class="practicedesc">
               The granularity or precision of information returned can be minimized in order to reduce entropy. For example, implementations of the Battery Status API [[?BATTERY-STATUS]] allowed for high precision (double-precision, or 15-17 significant digits) readings of the current battery level, which provided a short-term identifier that could be used to correlate traffic across origins or clearance of local state. Rounding off values to lower precision mitigates browser fingerprinting while maintaining functional use cases. Alternatively, providing Boolean or a small enumeration of values might provide functionality without revealing underlying details; for example, the Boolean <code>near</code> property in the Proximity Sensor API [[?PROXIMITY]].
@@ -375,7 +396,7 @@
               Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
             </p>
             <p class="practicedesc">
-              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a data-cite="?HTML/canvas.html#concept-canvas-origin-clean">origin-clean flag</a> [[?html]] allows control over whether an image canvas can be read, a significant fingerprinting surface.
+              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features or aspects of a feature. For example, an event defined in a feature might specify that certain properties that describe the hardware device that triggered it may be blank.
             </p>
           </div>     
         </section>
@@ -390,7 +411,7 @@
               If functionality does not require maintaining client-side state in a way that is subsequently queryable (or otherwise observable), avoid creating a new cookie-like feature. Can the functionality be accomplished with existing HTTP cookies or an existing JavaScript local storage API?
             </p>
             <p class="practicedesc">
-              For example, the Flash plugin's Local Shared Objects (LSOs) have often been used to duplicate and re-spawn HTTP cookies cleared by the user [[?FLASHCOOKIES]].
+              For example, the Flash plugin's Local Shared Objects (LSOs) used to be abused to duplicate and re-spawn HTTP cookies cleared by the user [[?FLASHCOOKIES]], and the single bit that indicates if the Strict-TransportSecurity Header has been set for a domain has been abused in the same way [[?HSTS-SUPERCOOKIE]].
             </p>
           </div>
           <p>Where features do require setting and retrieving local state, there are ways to mitigate the privacy impacts related to unexpected cookie-like behavior; in particular, you can help implementers prevent "permanent", "zombie", "super" or "evercookies".</p>
@@ -405,11 +426,11 @@
           <p>Permanent or persistent data (including any identifiers) are of particular risk because they undermine the ability for a user to clear or re-set the state of their device or to maintain different identities.</p>
           <div class="practice">
             <p>
-              <span id="no-permanent" class="practicelab">Limit permanent or persistent state.</span>
+              <span id="no-permanent" class="practicelab">Avoid permanent or persistent state.</span>
             </p>
             <p class="practicedesc">
-              Permanent identifiers or other state (for example, identifiers or keys set in hardware) should typically not be exposed. Where necessary, access to such identifiers would require user permission (however, explaining the implications of such permission to users may be difficult) and limitation to a particular origin (however, server-side collusion between origins will be difficult to detect).
-              As a result, your design should not rely on saving and later querying data on the client beyond a user's clearing cookies or other local state. That is, you should not expect any local state information to be permanent or to persist longer than other local state.
+              Permanent identifiers or other state (for example, identifiers or keys set in hardware) should typically not be used. Where necessary, access to such identifiers would require user permission and limitation to a particular origin. However even heavy-weight mitigations are imperfect: explaining the implications of such permission to users may be difficult and server-side collusion between origins is typically impossible to detect.
+              As a result, your design should not rely on saving and later querying data on the client and expecting it to persist beyond a user clearing cookies or other local state. That is, you should not expect any local state information to be permanent or to persist longer than other local state.
             </p>
           </div>
           <p>Though not strictly browser fingerprinting, there are other privacy concerns regarding user tracking for features that provide local storage of data. Mitigations suggested in the Web Storage API specification include: safe-listing, block-listing, expiration and secure deletion <a data-cite="?HTML/webstorage.html#user-tracking">[HTML#user-tracking]</a>.</p>
