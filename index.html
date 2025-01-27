@@ -3,76 +3,17 @@
   <head>
     <title>Mitigating Browser Fingerprinting in Web Specifications</title>
     <meta charset='utf-8'>
-    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove" defer></script>
     <script class='remove'>
       var respecConfig = {
-          // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-          //specStatus:           "IG-NOTE",
           specStatus: "ED",
           noRecTrack: true,
-          //publishDate: "2016-07-06",
-          // the specification's short name, as in http://www.w3.org/TR/short-name/
-          shortName:            "fingerprinting-guidance",
-
-          // if your specification has a subtitle that goes below the main
-          // formal title, define it here
-          // subtitle   :  "an excellent document",
-
-          // if you wish the publication date to be other than today, set this
-          // publishDate:  "2009-08-06",
-
-          // if the specification's copyright date is a range of years, specify
-          // the start date here:
-          // copyrightStart: "2005"
-
-          // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
-          // and its maturity status
-          previousPublishDate:  "2015-11-24",
-          previousMaturity:  "IG-NOTE",
-
-          // if there a publicly available Editor's Draft, this is the link
-          edDraftURI:           "https://w3c.github.io/fingerprinting-guidance/",
-
-          // if this is a LCWD, uncomment and set the end of its review period
-          // lcEnd: "2009-08-05",
-
-          // editors, add as many as you like
-          // only "name" is required
+          shortName: "fingerprinting-guidance",
+          group:           "wg/privacy",
+          github: "w3c/fingerprinting-guidance",
           editors:  [
               { name: "Nick Doty", url: "https://npdoty.name/" },
           ],
-          otherLinks: [{
-              key: "Version history",
-              data: [{
-                value: "GitHub commit history",
-                href: "https://github.com/w3c/fingerprinting-guidance/commits/gh-pages"
-           }]},
-           {
-                         key: "Issues list",
-                         data: [{
-                           value: "GitHub issues list",
-                           href: "https://github.com/w3c/fingerprinting-guidance/issues"
-                      }]
-           }
-           ],          
-
-          // name of the WG
-          wg:           "Privacy Interest Group",
-          
-          // URI of the public WG page
-          wgURI:        "https://www.w3.org/Privacy/",
-          
-          // name (without the @w3c.org) of the public mailing to which comments are due
-          wgPublicList: "public-privacy",
-          
-          // URI of the patent status for this WG, for Rec-track documents
-          // !!!! IMPORTANT !!!!
-          // This is important for Rec-track documents, do not copy a patent URI from a random
-          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
-          // Team Contact.
-          wgPatentURI:  "",
-          charterDisclosureURI: "https://www.w3.org/2011/07/privacy-ig-charter.html",
-          
           localBiblio: {
             "EVERCOOKIE": {
               "authors": ["Samy Kamkar"],
@@ -86,22 +27,6 @@
               "title": "Host Fingerprinting and Tracking on the Web: Privacy and Security Implications",
               "date": "February 2012",
               "publisher": "In Proceedings of the Network and Distributed System Security Symposium (NDSS)"
-            },
-            "RFC6973": {
-              "authors": [
-                  "A. Cooper",
-                  "H. Tschofenig",
-                  "B. Aboba",
-                  "J. Peterson",
-                  "J. Morris",
-                  "M. Hansen",
-                  "R. Smith"
-              ],
-              "href": "https://www.rfc-editor.org/rfc/rfc6973.txt",
-              "title": "Privacy Considerations for Internet Protocols",
-              "date": "July 2013",
-              "status": "RFC",
-              "publisher": "IETF"
             },
             "TAG-UNSANCTIONED": {
               "href": "https://w3ctag.github.io/unsanctioned-tracking/",
@@ -193,7 +118,8 @@
       Exposure of settings and characteristics of browsers can harm user privacy by allowing for browser fingerprinting. This document defines different types of fingerprinting, considers distinct levels of mitigation for the related privacy risks and provides guidance for Web specification authors on how to balance these concerns when designing new Web features.
     </section>
     <section id="sotd">
-      This document is a draft Interest Group Note to provide guidance to Web specification authors on mitigating the privacy impacts of browser fingerprinting, currently under development by the <a href="https://www.w3.org/Privacy/">Privacy Interest Group</a> (<abbr title="Privacy Interest Group">PING</abbr>). <a href="https://www.w3.org/TR/2015/NOTE-fingerprinting-guidance-20151124/">A snapshot draft of this Note was published on 24 November 2015</a>. PING is collaborating with the <a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance. Constructive input of all kinds would be useful; feel free to contact the editor directly, send comments to the <a href="mailto:public-privacy@w3.org">mailing list</a> or <a href="https://github.com/w3c/fingerprinting-guidance/issues">file issues on GitHub</a>.
+      <p>This document provide guidance to Web specification authors on mitigating the privacy impacts of browser fingerprinting.</p>
+      <p>The Privacy Working Group is collaborating with the <a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance.</p>
     </section>
     <section>
       <h2>Browser fingerprinting</h2>
@@ -469,7 +395,7 @@
         </section>
         <section>
           <h3>Clearing all local state</h3>
-          <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of cookie-like fingerprinting. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource).</p>
+          <p>Features which enable storage of data on the client and functionality for client- or server-side querying of that data can increase the ease of [=cookie-like fingerprinting=]. Storage can vary between large amounts of data (for example, the Web Storage API) or just a binary flag (has or has not provided a certain permission; has or has not cached a single resource).</p>
           <div class="practice">
             <p>
               <span id="no-new-cookies" class="practicelab">Avoid unnecessary new local state mechanisms.</span>
