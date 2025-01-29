@@ -11,6 +11,7 @@
           shortName: "fingerprinting-guidance",
           group:           "wg/privacy",
           github: "w3c/fingerprinting-guidance",
+          ref: "web-platform",
           editors:  [
               { name: "Nick Doty", url: "https://npdoty.name/", w3cid: "47451" },
               { name: "Tom Ritter", url: "https://ritter.vg", company: 'Mozilla', companyURL: 'https://mozilla.org', w3cid: "163004" },
@@ -54,6 +55,18 @@
               "date": "10 August 2009",
               "authors": ["Ashkan Soltani","Shannon Canty","Quentin Mayo","Lauren Thomas","Chris Jay Hoofnagle"],
               "title": "Flash Cookies and Privacy"
+            },
+            "EPHEMERAL-FINGERPRINTING": {
+              "href": "https://github.com/asankah/ephemeral-fingerprinting",
+              "date": "1 September 2020",
+              "authors": ["Asanka Herath"],
+              "title": "Ephemeral Fingerprinting On The Web"
+            },
+            "RENDERING-CONTENTION": {
+              "href": "https://www.usenix.org/system/files/sec22summer_wu.pdf",
+              "date": "August 2022",
+              "authors": ["Shujiang Wu", "Jianjia Yu", "Min Yang", "Yinzhi Cao"],
+              "title": "Rendering Contention Channel Made Practical in Web Browsers"
             },
             "FLASHCOOKIES-2": {
               "href": "https://ptolemy.berkeley.edu/projects/truststc/education/reu/11/Posters/AyensonMWambachDpaper.pdf",
@@ -195,6 +208,30 @@
           <p>Note that in some types of active fingerprinting, characteristics are combined on the client to produce a fingerprint. In most cases; however, the characteristics are sent en masse to a server, which can combine them in unobservable ways.  The latter mechanism may be detectable, but the efficacy of fingerprinting mitigation techniques is much harder to measure in this scenario.
         </section>
         <section>
+          <h3 id="ephemeral">Transient Event Correlation</h3>
+          <p><dfn class="lint-ignore">Transient Event Correlation</dfn> is a technique to associate separate
+            simultaneous sessions on a device with one another using observations of events
+            that occur near simultaneously on multiple origins [[?EPHEMERAL-FINGERPRINTING]].
+            These events are typically fired as a result of a change in hardware or environment,
+            such as when a <a data-cite="device-posture#device-posture-change">device's posture
+            changes</a> or when the
+            <a data-cite="mediacapture-streams" data-lt="device change notification steps">set
+            of available media devices changes</a>.</p>
+          <p>Transient event correlation is not typically a concern except in certain threat models
+            - it is only useful when an attacker is unable to link two sessions via passive or
+            active fingerprinting techniques, which would typically include considering the
+            sessions' IP address.  In uncommon situations, those techniques can fail, but
+            event correlation can still be used to link sessions between e.g. two
+            entirely different browser applications or two tabs that are sent over different
+            network connections.</p>
+          <p>Transient event correlation may be possible with complex CSS, but typically requires
+            JavaScript and it can be done in a reactive manner where JavaScript merely observes
+            events, or it can be done in a proactive manner by heavily utilizing resources such
+            as the CPU or GPU that another origin can observe. This type of attack between
+            cooperating origins is typically referred to as a "covert channel" and there have
+            been many papers about them using different techniques, for example [[?RENDERING-CONTENTION]].</p>
+        </section>
+        <section>
           <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like</h3>
           <p>Users, user agents and devices may also be re-identified by a site that first sets and later retrieves state stored by a user agent or device. This <dfn>cookie-like fingerprinting</dfn> allows re-identification of a user or inferences about a user in the same way that HTTP cookies allow state management for the stateless HTTP protocol [[?RFC6265]].</p>
           <p>Cookie-like fingerprinting can also circumvent user attempts to limit or clear cookies stored by the user agent, as demonstrated by the "evercookie" implementation [[?EVERCOOKIE]]. Where state is maintained across user agents (as in the case of common plugins with local storage), across devices (as in the case of certain browser syncing mechanisms) or across software upgrades, cookie-like fingerprinting can allow re-identification of users, user agents or devices where active and passive fingerprinting might not. The Security and Privacy Self-Review Questionnaire also considers this threat in origin state that persists across browsing sessions [[?security-privacy-questionnaire]].</p>
@@ -256,7 +293,7 @@
         <dt>entropy</dt><dd>How distinguishing is this new surface? Consider both the possible variations and the likely distribution of values. Adding 1-bit of entropy is typically of less concern; 30-some bits of entropy would be enough to uniquely identify every individual person. Different data sources may provide different distributions of variation; for example, even 1 bit of entropy can unique identify a user if they are the only one for whom it is true.</dd>
         <dt>detectability</dt><dd>Will use of this feature for browser fingerprinting be observable to the user agent or likely to be discoverable by researchers? Because detectability is an important &mdash; and perhaps the most feasible &mdash; mitigation, increases to the surface for <a>passive fingerprinting</a> are of particular concern and should be avoided.</dd>
         <dt>persistence</dt><dd>How long will the characteristics of this fingerprinting surface stay unchanged? Can users control or re-set these values to prevent long-lived identification? While short-lived characteristics may still enable unexpected correlation of activity (for example, between two browser profiles on the same device), persistent or permanent identifiers are particularly concerning for the lack of user control.</dd>
-        <dt>availability</dt><dd>Will this surface be available to the "drive-by Web" or only in certain contexts where a user has interacted with the document or granted a particular permission? While browser fingerprinting is still something to mitigate in the permissioned context, the concern that a feature will end up used primarily for fingerprinting is reduced.</dd>
+        <dt>availability</dt><dd>Will this surface be available to the "drive-by Web" or only in certain contexts such as when a document is visible or where a user has interacted with the document or granted a particular permission? While browser fingerprinting is still something to mitigate in the permissioned context, the concern that a feature will end up used primarily for fingerprinting is reduced.</dd>
         <dt>scope</dt><dd>Is this surface consistent across origins or only within a single origin? In general, characteristics or identifiers that are tied to a particular origin are of less concern and can be handled with the same tools as HTTP cookies.</dd>
       </dl>
 
@@ -290,6 +327,14 @@
             </p>
             <p class="practicedesc">
               What browsing contexts, resources and requests need access to a particular feature?  Identifiers can often be scoped to have a different value in different origins. Some configuration may only be necessary in top-level browsing contexts.
+            </p>
+            <p class="practicedesc" data-cite="html">
+              If an event is to be fired in response to an environmental or hardware change,
+              only fire that event when the {{Window}}'s [=associated document=]'s [=Document/visibility state=] is "`visible`",
+              or in {{Worker}}s whose [=WorkerGlobalScope/owner set=] includes such a <a data-cite="dom">Document</a>.
+              If background pages need to learn of the event when they're focused,
+              also fire the event while <a data-cite="HTML#update-the-visibility-state">updating the visibility state</a>.
+              Consider whether it should be restricted by an iframe sandbox.
             </p>
             <p class="practicedesc">
               Should access to this functionality be limited to where users have granted a particular permission? While excessive permissions can create confusion and fatigue, limiting highly granular data to situations where a user has already granted permission to access sensitive data widely mitigates the risk of that feature being used primarily for browser fingerprinting in "drive-by" contexts. For example, Media Capture and Streams [[?mediacapture-streams]] limits access to attached microphone and camera device labels to when the user has granted permission to access a camera or microphone (while still allowing access to the number and configuration of attached cameras and microphones in all contexts, a noted increase in drive-by fingerprinting surface).
