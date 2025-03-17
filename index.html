@@ -12,7 +12,7 @@
           group:           "wg/privacy",
           github: "w3c/fingerprinting-guidance",
           editors:  [
-              { name: "Nick Doty", url: "https://npdoty.name/" },
+              { name: "Nick Doty", url: "https://npdoty.name/", w3cid: "47451" },
           ],
           localBiblio: {
             "EVERCOOKIE": {
@@ -36,7 +36,7 @@
               "publisher": "W3C Technical Architecture Group"
             },
             "HIDING-CROWD": {
-              "href": "https://hal.inria.fr/hal-01718234v2",
+              "href": "https://inria.hal.science/hal-01718234v2",
               "title": "Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale",
               "date": "April 2018",
               "authors": ["Alejandro Gómez-Boix", "Pierre Laperdrix", "Benoit Baudry"],
@@ -83,29 +83,15 @@
               "title": "Beauty and the Beast: Diverting modern web browsers to build unique browser fingerprints",
               "publisher": "IEEE Symposium on Security and Privacy (S&P 2016)", 
               "date": "May 2016",
-              "href": "https://hal.inria.fr/hal-01285470v2/"
-            },
-            "httpbis-client-hints": {
-              "href": "https://httpwg.org/http-extensions/client-hints.html",
-              "title": "HTTP Client Hints",
-              "authors": ["Ilya Grigorik"],
-              "date": "January 2019",
-              "publisher": "HTTP Working Group"
-            },
-            "security-privacy-questionnaire-tag": {
-              "href": "https://w3ctag.github.io/security-questionnaire/",
-              "authors": ["Lukasz Olejnik", "Jason Novak"],
-              "date": "December 2018",
-              "title": "Self-Review Questionnaire: Security and Privacy",
-              "publisher": "W3C Technical Architecture Group"
+              "href": "https://inria.hal.science/hal-01285470v2/"
             }
           }
       };
       </script>
       <style type="text/css" media="screen">
         img.fingerprint {
-          float: left; 
-          margin-left: -25px;
+          float: left;
+          padding: 0.5ex;
         }
         ul.practicedesc {
             margin-top: -2em;
@@ -119,7 +105,7 @@
     </section>
     <section id="sotd">
       <p>This document provide guidance to Web specification authors on mitigating the privacy impacts of browser fingerprinting.</p>
-      <p>The Privacy Working Group is collaborating with the <a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance.</p>
+      <p>The Privacy Working Group is collaborating with the <a href="https://www.w3.org/groups/other/tag/">Technical Architecture Group</a> (<abbr title="Technical Architecture Group">TAG</abbr>) on this guidance.</p>
     </section>
     <section>
       <h2>Browser fingerprinting</h2>
@@ -148,7 +134,7 @@
         <section>
           <h3>Correlation of browsing activity</h3>
           <p>Browser fingerprinting raises privacy concerns even when offline identities are not implicated. Some users may be surprised or concerned that an online party can correlate multiple visits (on the same or different sites) to develop a profile or history of the user. This concern may be heightened because (see below) it may occur without the user's knowledge or consent and tools such as clearing cookies do not prevent further correlation.</p>
-          <p>Browser fingerprinting also allows for tracking across <a class="externalDFN" href="https://tools.ietf.org/html/rfc6454#section-4">origins</a> [[?RFC6454]]: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
+          <p>Browser fingerprinting also allows for tracking across <a class="externalDFN" data-cite="rfc6454#section-4">origins</a> [[?RFC6454]]: different sites may be able to combine information about a single user even where a cookie policy would block accessing of cookies between origins, because the fingerprint is relatively unique and the same for all origins.</p>
         </section>
         
         <section>
@@ -167,7 +153,7 @@
         Mitigations recommended here are simply mitigations, not solutions. Users of the Web cannot confidently rely on sites being completely unable to correlate traffic, especially when executing client-side code. A fingerprinting surface extends across all implemented Web features for a particular user agent, and even to other layers of the stack; for example, differences in TCP connections. For example, a user might employ an onion routing system such as Tor to limit network-level linkability, but still face the risk of correlating Web-based activity through browser fingerprinting, or vice versa. In order to mitigate these privacy risks as a whole, fingerprinting must be considered during the design and development of all specifications.
       </p>
       <p>
-        The TAG finding on Unsanctioned Web Tracking, including browser fingerprinting, includes description of the limitations of technical measures and encourages minimizing and documenting new fingerprinting surface [[?TAG-UNSANCTIONED]]. The best practices below detail common actions that authors of specifications for Web features can take to mitigate the privacy impacts of browser fingerprinting. The Self-Review Questionnaire documents mitigations of privacy impacts in Web features more generally that may complement these practices [[?security-privacy-questionnaire-tag]].
+        The TAG finding on Unsanctioned Web Tracking, including browser fingerprinting, includes description of the limitations of technical measures and encourages minimizing and documenting new fingerprinting surface [[?TAG-UNSANCTIONED]]. The best practices below detail common actions that authors of specifications for Web features can take to mitigate the privacy impacts of browser fingerprinting. The Self-Review Questionnaire documents mitigations of privacy impacts in Web features more generally that may complement these practices [[?security-privacy-questionnaire]].
       </p>
     </section>
     </section>
@@ -179,7 +165,7 @@
         <section>
           <h3 id="passive">Passive</h3>
           <p><dfn>Passive fingerprinting</dfn> is browser fingerprinting based on characteristics observable in the contents of Web requests, without the use of any code executed on the client.</p>
-          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests), the set of HTTP request headers and the IP address and other network-level information. The <a href="https://tools.ietf.org/html/rfc7231#section-5.5.3">User-Agent string</a> [[?RFC7231]], for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the User-Agent and IP address will often uniquely identify a particular user's browser [[?NDSS-FINGERPRINTING]].</p>
+          <p>Passive fingerprinting would trivially include cookies (often unique identifiers sent in HTTP requests), the set of HTTP request headers and the IP address and other network-level information. The <a data-cite="rfc9110#name-user-agent">User-Agent string</a> [[?RFC9110]], for example, is an HTTP request header that typically identifies the browser, renderer, version and operating system. For some populations, the User-Agent and IP address will often uniquely identify a particular user's browser [[?NDSS-FINGERPRINTING]].</p>
         </section>
         <section>
           <h3 id="active">Active</h3>
@@ -189,7 +175,7 @@
         <section>
           <h3 id="cookie_like_setting_retrieving_local_state">Cookie-like</h3>
           <p>Users, user agents and devices may also be re-identified by a site that first sets and later retrieves state stored by a user agent or device. This <dfn>cookie-like fingerprinting</dfn> allows re-identification of a user or inferences about a user in the same way that HTTP cookies allow state management for the stateless HTTP protocol [[?RFC6265]].</p>
-          <p>Cookie-like fingerprinting can also circumvent user attempts to limit or clear cookies stored by the user agent, as demonstrated by the "evercookie" implementation [[?EVERCOOKIE]]. Where state is maintained across user agents (as in the case of common plugins with local storage), across devices (as in the case of certain browser syncing mechanisms) or across software upgrades, cookie-like fingerprinting can allow re-identification of users, user agents or devices where active and passive fingerprinting might not. The Security and Privacy Self-Review Questionnaire also considers this threat in origin state that persists across browsing sessions [[?security-privacy-questionnaire-tag]].</p>
+          <p>Cookie-like fingerprinting can also circumvent user attempts to limit or clear cookies stored by the user agent, as demonstrated by the "evercookie" implementation [[?EVERCOOKIE]]. Where state is maintained across user agents (as in the case of common plugins with local storage), across devices (as in the case of certain browser syncing mechanisms) or across software upgrades, cookie-like fingerprinting can allow re-identification of users, user agents or devices where active and passive fingerprinting might not. The Security and Privacy Self-Review Questionnaire also considers this threat in origin state that persists across browsing sessions [[?security-privacy-questionnaire]].</p>
         </section>
     </section>
 
@@ -295,14 +281,14 @@
               <span id="mark-fingerprinting" class="practicelab">Mark features that contribute to fingerprintability.</span>
             </p>
             <p class="practicedesc">
-              <img src="https://www.w3.org/TR/html5/images/fingerprint.png" class="fingerprint" alt="This feature may contribute to browser fingerprintability.">
+              <img src="fingerprint.png" class="fingerprint" alt="This feature may contribute to browser fingerprintability." width="15" height="21">
               Where a feature does contribute to the <a>fingerprinting surface</a>, indicate that impact, by explaining the effect (and any known implementer mitigations) and marking the relevant section with a fingerprinting icon, as this paragraph is.            
             </p>
           </div>
           <div class="example">
             The following code can be used to mark a paragraph with the fingerprint icon.
             <pre class="highlight">
-&lt;img src=&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;html5&#x2F;images&#x2F;fingerprint.png&quot; 
+&lt;img src=&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;Icons&#x2F;fingerprint.png&quot;
      class=&quot;fingerprint&quot; 
      alt=&quot;This feature may contribute to browser fingerprintability.&quot;&gt;</pre>
           </div>
@@ -368,7 +354,7 @@
                 Even for data sent in HTTP request headers, requiring servers to advertise use of particular data, publicly document a policy, or "opt in" before clients send configuration data provides the possibility of detection by user agents or researchers.
               </p>
               <p class="practicedesc">
-                For example, Client Hints [[?httpbis-client-hints]] proposes an <code>Accept-CH</code> response header for services to indicate that specific hints can be used for content negotiation, rather than all supporting clients sending all hints in all requests.
+                For example, Client Hints [[?client-hints-infrastructure]] proposes an <code>Accept-CH</code> response header for services to indicate that specific hints can be used for content negotiation, rather than all supporting clients sending all hints in all requests.
               </p>
               <p class="note">
                 This is a relatively new approach; we're still evaluating whether this provides meaningful and useful detectability.
@@ -389,7 +375,7 @@
               Following the principle of progressive enhancement, and to avoid further divergence (which might itself expose variation in users), consider whether some functionality in your specification is still possible if fingerprinting surface features are disabled. 
             </p>
             <p class="practicedesc">
-              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a data-cite="html52/semantics-scripting.html#canvas-origin-clean">origin-clean flag</a> [[?html52]] allows control over whether an image canvas can be read, a significant fingerprinting surface.
+              Explicit hooks or API flags may be used so that browser extensions or certain user agents can easily disable specific features. For example, the <a data-cite="?HTML/canvas.html#concept-canvas-origin-clean">origin-clean flag</a> [[?html]] allows control over whether an image canvas can be read, a significant fingerprinting surface.
             </p>
           </div>     
         </section>
@@ -448,7 +434,7 @@
           <li>The Chromium Projects: <a href="https://www.chromium.org/Home/chromium-security/client-identification-mechanisms/">Technical analysis of client identification mechanisms</a></li>
           <li><a href="https://trac.webkit.org/wiki/Fingerprinting">WebKit Wiki: Fingerprinting</a></li>
           <li><a href="https://wiki.mozilla.org/Fingerprinting">Mozilla Wiki: Fingerprinting</a></li>
-          <li><a href="https://spec.torproject.org/torbrowser-design#fingerprinting-linkability#fingerprinting-linkability">The Design and Implementation of the Tor Browser: Cross-Origin Fingerprinting Unlinkability</a></li>
+          <li><a href="https://spec.torproject.org/torbrowser-design#fingerprinting-linkability">The Design and Implementation of the Tor Browser: Cross-Origin Fingerprinting Unlinkability</a></li>
         </ul>
       </section>
 
@@ -456,18 +442,18 @@
         <h3>Academic research</h3>        
         <p>What are the key papers to read here, historically or to give the latest on fingerprinting techniques? What are some areas of open research that might be relevant?</p>
         <ul>
-          <li>Eckersley, Peter. "<a href="https://panopticlick.eff.org/static/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010.</li>
+          <li>Eckersley, Peter. "<a href="https://coveryourtracks.eff.org/static/browser-uniqueness.pdf">How unique is your web browser?</a>" <i>Privacy Enhancing Technologies</i>. Springer Berlin Heidelberg, 2010.</li>
           <li>Mowery, Keaton, Dillon Bogenreif, Scott Yilek, and Hovav Shacham. “<a href="https://cseweb.ucsd.edu/~kmowery/papers/js-fingerprinting.pdf">Fingerprinting Information in JavaScript Implementations</a>.” In <i>Web 2.0 Security and Privacy</i>, 2011.</li>
           <li>Yen, Ting-Fang, et al. "<a href="https://www.microsoft.com/en-us/research/publication/host-fingerprinting-and-tracking-on-the-webprivacy-and-security-implications/">Host fingerprinting and tracking on the web: Privacy and security implications</a>." <em>Proceedings of NDSS</em>. 2012. [[?NDSS-FINGERPRINTING]]</li>
           <li>Mowery, Keaton, and Hovav Shacham. "<a href="https://hovav.net/ucsd/dist/canvas.pdf">Pixel perfect: Fingerprinting canvas in HTML5</a>." <i>Web 2.0 Security and Privacy</i>, 2012.</li>
           <li id="wsj-orbitz">Mattioli, Dana. "<a href="https://www.wsj.com/articles/SB10001424052702304458604577488822667325882">On Orbitz, Mac Users Steered to Pricier Hotels</a>". <i>Wall Street Journal</i>, August 23, 2012.</li>
           <li id="FPDetective">Gunes Acar et al. "<a href="https://dl.acm.org/citation.cfm?id=2516674">FPDetective: dusting the web for fingerprinters</a>." In <i>CCS '13</i>.</li>
-          <li>Nikiforakis, Nick, et al. "<a href="https://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2013)</i>, 2013.</li>
+          <li>Nikiforakis, Nick, et al. "<a href="https://sites.cs.ucsb.edu/~vigna/publications/2013_SP_cookieless.pdf">Cookieless monster: Exploring the ecosystem of web-based device fingerprinting</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2013)</i>, 2013.</li>
           <li>G. Acar, C. Eubank, S. Englehardt, M. Juarez, A. Narayanan, C. Diaz. "<a href="https://securehomes.esat.kuleuven.be/%7Egacar/persistent/">The Web never forgets: Persistent tracking mechanisms in the wild</a>." In <i>Proceedings of CCS 2014</i>, Nov. 2014.</li>
           <li>Steven Englehardt, Arvind Narayanan. "<a href="https://webtransparency.cs.princeton.edu/webcensus/">Online tracking: A 1-million-site measurement and analysis</a>." May 2016. [[?WPM-MILLION]]</li>
-          <li>Pierre Laperdrix, Walter Rudametkin, Benoit Baudry. "<a href="https://hal.inria.fr/hal-01285470v2/">Beauty and the Beast: Diverting modern web browsers to build unique browser fingerprints</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2016)</i>, May 2016.</li>
+          <li>Pierre Laperdrix, Walter Rudametkin, Benoit Baudry. "<a href="https://inria.hal.science/hal-01285470v2/">Beauty and the Beast: Diverting modern web browsers to build unique browser fingerprints</a>." <i>IEEE Symposium on Security and Privacy (S&amp;P 2016)</i>, May 2016.</li>
           <li>
-            "<a href="https://hal.inria.fr/hal-01718234v2">Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale</a>." <i>WWW2018 - TheWebConf 2018: 27th International World Wide Web Conference</i>, April 2018. [[?HIDING-CROWD]]
+            "<a href="https://inria.hal.science/hal-01718234v2">Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale</a>." <i>WWW2018 - TheWebConf 2018: 27th International World Wide Web Conference</i>, April 2018. [[?HIDING-CROWD]]
           </li>
         </ul>
       </section>
