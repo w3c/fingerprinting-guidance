@@ -320,15 +320,6 @@
 			<p>
         Specifications can mitigate against fingerprintability through standardization; by defining a consistent behavior, conformant implementations won't have variations that can be used for browser fingerprinting.
 			</p>
-      <p>
-        Randomization of certain browser characteristics has been proposed as a way to combat browser fingerprinting. The concept is that if a user agent provides different values for a characteristic to different origins, across different browser sessions (including Normal vs any sort of Private Browsing Mode), then cross-origin tracking will not work, and same-origin tracking across different sessions will not work.
-      </p>
-      <p>
-        While this strategy may be pursued by some implementations, as a whole randomization should be considered something that will not increase fingerprintability, but is not a real defense against it either.  It can provide defense against naive fingerprinting techniques who do not attempt to detect or circumvent it, but once a fingerprinter has considered randomness in their logic, it typically loses effectiveness immediately. In the best scenario, they simple discard the metric with randomness and cross-site or cross-session tracking continues to work at a slightly lower level of efficacy. In the worst scenario, the randomness is entirely circumvented by averaging values, abusing implementation gaps, bucketing close values, or other techniques.
-      </p>
-      <p>
-        Randomness also has other costs as described in the Tor Browser design [[?TOR-DESIGN]]: it can be costly to implement in terms of usability (varying functionality or design in unwanted ways), processing (generating random numbers) and development (including the cost of introducing new security vulnerabilities). It also can mislead users into believing they are more fingerprintable than they actually are (or that a user agent is more fingerprintable than another) when using online test sites that attempt to measure browser uniqueness.
-      </p>
       <div class="practice">
         <p>
           <span id="specify-ordering" class="practicelab">Specify orderings and non-functional differences.</span>
@@ -449,6 +440,115 @@
             If your specification introduces a new communication channel that could be used for tracking, you might wish to define how a DNT signal should be communicated.
           </p>
         </section>
+        <section><h3 id="randomness">Randomness</h3>
+          <p>The premise of fingerprinting is that it allows re-identification of users, with better-than-random confidence, without stateful tools like cookies. 
+          Conceptually, randomness is designed to frustrate correlating a user's values across two different axes.
+          One axis would be a user visiting two different sites simultaneously.
+          The second would be a user visiting the same site at two different points in time 
+          (this pre-supposes a user clears stateful identifiers like cookies - not doing so will make re-identification without fingerprinting trivial, but that is outside the scope of our defenses).</p>
+          <p>The techniques for re-identification can be thought of as a balance of the trade-offs between
+          not re-identifying the same user because you were being too strict in your matching techniques,
+          with incorrectly conflating two different users because the matching technique is too fuzzy.
+          A fingerprinter frequently has the expectation that certain Web APIs will reliably report the same value in all contexts.
+          When that expectation is violated, their algorithm fails to re-identify the user.
+          Adding randomness into a Web API violates that expectation.</p>
+          <p>This technique works _very_ well for as long as the fingerprinter has the expectation -
+          the re-identification algorithm will generally fail to re-identify users in all of these cases.
+          (We often refer to fingerprinters of this type as 'naive fingerprinters', because they have not adjusted their algorithms to account for randomness.)
+          But the behavior of User Agents is open to inspection, and when a fingerprinter realizes their expectation is invalid, they can adjust their algorithm to account for it.
+          After doing so, randomness has _less_ value but it still has _some_ value, because the re-identification algorithm usually has been made slightly less accurate than it was originally, before randomness was introduced.</p>
+          <p>The fingerprinting scripts deployed on the web come from a variety of sources, and are not updated uniformly,
+          thus it is likely that randomness being added might be 
+          entirely negated by some fingerprinters (because they devised a total bypass),
+          partially negated by others (because they detect when randomness is added and adjust their algorithm),
+          and still completely thwart others.
+          </p>
+          <p>Randomness can also be seen as a way to ensure websites do not ossify their behavior
+          by expecting a certain value from a User Agent, and then break when the value is different -
+          similar to the GREASE technique in TLS.</p>
+          
+          <h4>Web Compatibility Concerns</h4>
+          <p>One of the drawbacks of randomness is the risk that existing websites may behave incorrectly when exposed to randomness -
+          either because they expect a deterministic outcome and base decisions on it,
+          or because the way they use the functionality fundamentally conflicts with randomness being added.
+          As an example, you can imagine a tool that accepts two images and compares them pixel-by-pixel for differences.
+          If the canvas API adds small bits of randomness into the image when it is read from the canvas -
+          the comparison algorithm will flag it as differences in the images compared,
+          even though in actuality the pixel is identical between images.</p>
+          <p>Randomness might be applied selectively based on heuristics that take into account any number of factors,
+          such as settings the user has chosen in their User Agent,
+          any contextual information about the script calling a web API,
+          how or when the API is invoked, and the user's current or prior interaction with the site.
+          It is generally suggested that User Agents give users a way to disable randomness -
+          either globally or on a per-site basis - to mitigate this risk,
+          but we acknowledge the number of users who will know to do so is the minority.</p>
+          <p>As separate concerns, randomness adds engineering costs,
+          community costs communicating the behavior and fielding bug reports,
+          can have performance drawbacks or introduce security vulnerabilities.
+          It also can mislead users into believing they are more fingerprintable than they actually are
+          (or that a user agent is more fingerprintable than another)
+          when using online test sites that attempt to measure browser uniqueness.</p>
+          
+          <h4>Randomness Implementation</h4>
+          <p>Randomness added must be deterministic - if it is recalculated each time an API is called,
+          it is not difficult for a fingerprinter to call it many times and average out the randomness.
+          The source of determinism can be thought of as a function accepting a number of keys,
+          and outputting according to the random oracle model.
+          The keys given to the function correlate to any number of different domains that are used segment
+          the random values across those domains.
+          For example: two different web APIs should use different values for one of the keys,
+          so that the same randomness is not used for the different APIs.
+          There should be a key with separate values for Normal and Private Browsing modes.
+          While each implementer may have their own set of keys depending on features and details of their User Agent, we suggest that a minimum set of keys would compromise:</p>
+
+          <ul>
+          <li>A per-session value that changes on the restart of the User Agent</li>
+           <li>A per-origin or per-site value, that is inherited by any third-party iframes. It is important to inherit the value into third-party iframes to prevent correlation across different sites.</li>
+           <li>A value that differs between Normal browsing windows and any sort of Private Browsing sessions, including between storage-separated Private Browsing sessions</li>
+           <li>A value that differs between any other sort of contextual separation of origins, such as different profiles</li>
+           <li>A value that differs for each Web API, for example canvas or WebAudio</li>
+           <li>A value that rotates on a regular basis, for example every 24 hours</li>
+         </ul>
+
+          <p>It's worthwhile to note that if storage is cleared for an origin,
+          for example through the `Clear-Site-Data` header or manual user intervention,
+          this should also change the value of the per-origin key.
+          This means that while some of these keys may be represented by constants
+          (e.g. the key for Canvas might simply be 'canvas'), other keys such as the origin key should be random values so that they can be regenerated.</p>
+
+          <h4>For Spec Authors</h4>
+
+          <div class="practice">
+            <p>
+              <span id="no-permanent" class="practicelab">Expect the possibility of randomness.</span>
+            </p>
+            <p class="practicedesc">User Agents are pursuing randomness to a greater and greater degree.
+            At this point you should expect that an API may be chosen to be implemented with some degree of randomness included.
+            When an API reports a specific value about a user's configuration (such as hardware capabilities) - that value may be adjusted - especially when it is reporting very fine-grained details.
+            Additionally, when an API processes data and returns a detailed result (such as a processed image, video frame, audio, etc) - that result may be modified as well.</p>
+
+            <p class="practicedesc">Generally speaking it is not the responsibility of the spec author to handle these concerns;
+            rather it is the user agents to decide when and how to apply randomness
+            in a way that balances the privacy benefits with the need for web compatibility and developer expectations.
+            However, spec authors should avoid writing specifications that assume determinism,
+            and should consider documenting that implementations may return randomized results for privacy reasons.</p>
+          </div>
+
+          <div class="practice">
+            <p>
+              <span id="no-permanent" class="practicelab">Look for opportunities to create simpler APIs.</span>
+            </p>
+            <p class="practicedesc">Spec authors should pay close attention to how their APIs are used in practice,
+            particularly watching for patterns of unintentional or secondary use cases that may not have been part of the original design goals. 
+            In some cases, developers rely on complex APIs to achieve relatively simple outcomes -
+            outcomes that could be supported more directly with a purpose-built, simpler API.
+            When such patterns are identified, introducing a dedicated API tailored to that use case can reduce reliance on side effects or overly general functionality.
+            Not only does this improve reliability and developer ergonomics, but it may also allow user agents to implement the simpler API without needing to inject randomness,
+            as its narrower scope may present fewer opportunities for fingerprinting. 
+            This helps preserve both user privacy and web compatibility.</p>
+          </div>
+        </section>
+
     </section>
     
     <section class="appendix" id="research">
